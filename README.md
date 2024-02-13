@@ -15,14 +15,14 @@ This library formalizes in `Coq 8.14+` basic results _Almost Full relations_ in 
 a notion defined inductivelly that is the constructive counterpart of the classical
 notion of _Well Quasi Order_ (WQO). The results contained in here are:
 - the `af R` predicate (see below) characterizing AF relations;
-- the equivalence with _Bar inductive predicates_: `af R <-> bar (good R) []`;
+- the equivalence with _Bar inductive predicates_: `af R ↔ bar (good R) []`;
 - stability properties for `af`/`bar`:
-  - under direct products and direct sums via Coquand's version Ramsey's theorem;
-  - under relation morphism;
+  - under _direct products_ and _direct sums_ via Coquand's version Ramsey's theorem;
+  - under relational morphism;
   - `af =` for finite types;
-  - etc
+  - as a consequence, we get eg _Dickson's lemma_.
  
-This library is distributed under the terms of the [MPL-2.0]() public license.
+This library is distributed under the terms of the [MPL-2.0](LICENSE) license.
 
 # Dependencies
 It can be installed via `opam` and requires
@@ -31,10 +31,10 @@ It can be installed via `opam` and requires
   
 # Overview of the definitions
 
-Following the work of Coquand _et al_ in eg [Stop When You are Almost Full](),
+Following the work of Coquand _et al_ in eg [Stop When You Are Almost-Full](https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17),
 we characterize AF relations using an inductive predicate:
 ```coq
-Inductive af {X} (R : X → X → Prop) : Prop :=
+Inductive af {X : Type} (R : X → X → Prop) : Prop :=
   | af_full : (∀ x y, R x y) → af R
   | af_lift : (∀ a, af (R↑a)) → af R.
 ```
@@ -42,12 +42,13 @@ where `R↑a := λ x y, R x y ∨ R a x`.
 
 From this definition, we can recover the classical property of WQOs:
 ```coq
-   af R → ∀f : nat → X, ∃ i j, i < j ∧ R (f i) (f j)
+∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R (f i) (f j)
 ```
-that is, any sequence f contains a good (ie increasing) pair.
+where the type `X` is not explicited, that is, any (infinite) 
+sequence `f : nat → X` contains a _good pair_ (ie increasing).
 
 An alternative characterization can be implemented at `Type` (informative)
-level instead of the `Prop` (non-informative) level with the nearly
+level instead of the `Prop` (non-informative) level with the __nearly__
 identical definition:
 ```coq
 Inductive af {X} (R : X → X → Prop) : Type :=
@@ -56,14 +57,15 @@ Inductive af {X} (R : X → X → Prop) : Type :=
 ```
 In that case, the classical property we derive is more informative:
 ```coq
-   af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R (f i) (f j) }
+∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R (f i) (f j) }
 ```
-and read as follows: for any sequence `f : nat → X`, one can
-compute a bound `n` (from `af R` and `f`) such that below that
-bound, we know for sure that there is a good pair in `f₀`,...,`fₙ₋₁`
+and read as follows: for any sequence `f : nat → X`, _one can
+compute a bound `n`_ (from information in `af R` and `f`) such that 
+below that bound, we know for sure that there is a good pair 
+in the initial segment `f₀`,...,`fₙ₋₁`.
 
 In the `Type` case, the `af` predicate is _more informative_ (and
-hence stronger) than in the `Prop` case: it contains a computational
+indeed stronger) than in the `Prop` case: it contains a computational
 contents.
 
 # Dealing with `Prop` vs `Type`
