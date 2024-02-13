@@ -42,8 +42,11 @@ Section af_double_induction.
 
 End af_double_induction.
 
-#[local] Tactic Notation "af" "induction" hyp(R) hyp(T) "as" ident(HR) ident(HT) :=
-  intros HR HT; pattern R, T; revert R T HR HT; apply af_double_induction; intros R T HR HT.
+#[local] Tactic Notation "af" "induction" "as" ident(HR) ident(HT) :=
+  match goal with
+  | |- af ?R → af ?T → _ =>
+     intros HR HT; pattern R, T; revert R T HR HT; apply af_double_induction; intros R T HR HT
+  end.
 
 Section af_intersection.
 
@@ -60,7 +63,7 @@ Section af_intersection.
                 → T ⊆₂ C ∪₂ (λ _ _, B)
                 → af (λ x y, C x y ∨ A ∧ B).
   Proof.
-    af induction R T as HR HT; intros C HRC HTC.
+    af induction as HR HT; intros C HRC HTC.
     + apply af_mono with (2 := HT).
       intros x y []%HTC; auto.
       generalize (HRC _ _ (HR x y)); squeeze.
@@ -88,7 +91,7 @@ Section af_intersection.
                 → T ⊆₂ C ∪₂ (λ x _, B x)
                 → af (λ x y, C x y ∨ A x ∧ B x).
   Proof.
-   af induction R T as HR HT; intros C HRC HTC.
+   af induction as HR HT; intros C HRC HTC.
    + apply af_mono with (2 := HT).
      intros x y; generalize (HRC x y) (HTC x y) (HR x y); squeeze.
    + apply af_mono with (2 := HR).
@@ -120,7 +123,7 @@ Section af_intersection.
 
   Theorem af_inter R T : af R → af T → af (R ∩₂ T).
   Proof.
-    af induction R T as HR HT.
+    af induction as HR HT.
     + apply af_mono with (2 := HT); squeeze.
     + apply af_mono with (2 := HR); squeeze.
     + constructor 2; intros a.
