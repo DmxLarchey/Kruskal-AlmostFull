@@ -110,12 +110,12 @@ using the generic first order syntax depending on the choice of `Base`.
 From the point of view of the external interface, if one wants
 the `Base := Prop` choice, then the import command would be:
 ```coq
-Form KruskalAfProp Require Export base almost_full.
+From KruskalAfProp Require Export base almost_full.
 ```
 and on the other hand, for the `Base := Type` choice, the import
 command would be:
 ```coq
-Form KruskalAfType Require Export base almost_full.
+From KruskalAfType Require Export base almost_full.
 ```
 
 It is recommanded to perform this import in a single file using
