@@ -17,7 +17,6 @@ af/af.v
 af/bar.v
 af/af_good.v
 af/fan.v
-af/fan_rel.v
 af/af_eq.v
 af/af_bar.v
 af/af_ramsey.v

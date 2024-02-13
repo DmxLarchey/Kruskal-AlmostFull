@@ -4,7 +4,7 @@ install: prop_install type_install
 
 prop:
 	export TIMED
-	cp -f implem/prop.v theories/base/base_implem.v
+	cp -f theories/implem/prop.v theories/base/base_implem.v
 	rm -f theories/_CoqProject
 	echo '-R . KruskalAfProp' > theories/_CoqProject
 	cat theories/CoqProject >> theories/_CoqProject
@@ -15,7 +15,7 @@ prop:
 
 type:
 	export TIMED
-	cp -f implem/type.v theories/base/base_implem.v
+	cp -f theories/implem/type.v theories/base/base_implem.v
 	rm -f theories/_CoqProject
 	echo '-R . KruskalAfType' > theories/_CoqProject
 	cat theories/CoqProject >> theories/_CoqProject
