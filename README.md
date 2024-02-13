@@ -36,22 +36,23 @@ we characterize AF relations using an inductive predicate:
 ```coq
 Inductive af {X : Type} (R : X → X → Prop) : Prop :=
   | af_full : (∀ x y, R x y) → af R
-  | af_lift : (∀ a, af (R↑a)) → af R.
+  | af_lift : (∀ a, af (R↑a)) → af R
+where "R↑a" := (λ x y, R x y ∨ R a x).
 ```
-where `R↑a := λ x y, R x y ∨ R a x`.
 
 From this definition, we can recover the classical property of WQOs:
 ```coq
 ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R (f i) (f j)
 ```
-where the type `X` is not explicited, that is, any (infinite) 
-sequence `f : nat → X` contains a _good pair_ (ie increasing).
+where the type `X` is not explicited: this means that any (infinite) 
+sequence `f : nat → X` contains a _good pair_ (ie increasing, `i < j` and
+`R fᵢ fⱼ` at the same time).
 
-An alternative characterization can be implemented at `Type` (informative)
-level instead of the `Prop` (non-informative) level with the __nearly__
+An alternative characterization can be implemented at `Type` level
+instead of the `Prop` level (non-informative) with the __nearly__
 identical definition:
 ```coq
-Inductive af {X} (R : X → X → Prop) : Type :=
+Inductive af {X : Type} (R : X → X → Prop) : Type :=
   | af_full : (∀ x y, R x y) → af R
   | af_lift : (∀ a, af (R↑a)) → af R.
 ```
@@ -60,9 +61,11 @@ In that case, the classical property we derive is more informative:
 ∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R (f i) (f j) }
 ```
 and read as follows: for any sequence `f : nat → X`, _one can
-compute a bound `n`_ (from information in `af R` and `f`) such that 
-below that bound, we know for sure that there is a good pair 
-in the initial segment `f₀`,...,`fₙ₋₁`.
+compute a bound_ (from information contained in both `af R` and `f`)
+such that below that bound `n`, we know for sure that there is a good pair 
+in the initial segment `f₀`,...,`fₙ₋₁`. Notice we do not necessarily
+have enough information to compute where this good pair is inside
+that initial segment (eg when `R` is not decidable).
 
 In the `Type` case, the `af` predicate is _more informative_ (and
 indeed stronger) than in the `Prop` case: it contains a computational
@@ -70,28 +73,39 @@ contents.
 
 # Dealing with `Prop` vs `Type`
 
-The library deals with both implementations in a _generic way_, using
-the same code base. Indeed, in `Ltac` language, identical proof scripts
-can accomodate with the two variants in a uniform way. The actual
-Coq lambda-terms produced by these scripts differ however.
+The library deals with both versions in a _generic way_, using
+the _same code base_. Indeed, in `Ltac` language, identical proof scripts
+can accomodate with the two variants `Prop` vs `Type` in a uniform way.
+The actual Coq lambda-terms produced by these scripts differ however but
+they are computer generated in this library.
 
 To deal with the `Prop` vs `Type` choice, we define a type notation
-`Base` which is either `Base := Prop` or `Base := Type` and an
-dependent on this choice, notation for first order like operators:
+`Base` which is either `Base := Prop` or `Base := Type` and, consistently
+with this choice, notations for first order like operators described
+below:
 ```
-      +------+-----------+---------+----------+--------------+
-      | Base |   ⊥ₜ      |   ∨ₜ    |   ∧ₜ     |   ∃ₜ         |
-      +------+-----------+---------+----------+--------------+
-      | Prop | False     | ∨ / or  | ∧ / and  | ∃ / ex       |
-      | Type | Empty_set | + / sum | * / prod | { & } / sigT |
-      +------+-----------+---------+----------+--------------+
++------+-----------+---------+----------+--------------+
+| Base |   ⊥ₜ      |   ∨ₜ    |   ∧ₜ     |   ∃ₜ         |
++------+-----------+---------+----------+--------------+
+| Prop | False     | ∨ / or  | ∧ / and  | ∃ / ex       |
+| Type | Empty_set | + / sum | * / prod | { & } / sigT |
++------+-----------+---------+----------+--------------+
 ```
-Hence, the definition of `af` becomes
+Hence, the generic definition of `af` becomes
 ```coq
 Inductive af {X} (R : X → X → Prop) : Base :=
   | af_full : (∀ x y, R x y) → af R
   | af_lift : (∀ a, af (R↑a)) → af R.
 ```
+
+To be complete, in this setting, the classical property of WQOs is
+stated (and proved) as:
+```coq
+   af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j)
+```
+using the generic first order syntax depending on the choice of `Base`.
+
+# The external interface
 
 From the point of view of the external interface, if one wants
 the `Base := Prop` choice, then the import command would be:
@@ -108,10 +122,5 @@ It is recommanded to perform this import in a single file using
 the `Export` directive so that `Base` would be properly defined
 in every single file importing the library.
 
-To conclude, in this setting, the classical property of WQOs is
-stated (and proved) as:
-```coq
-   af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j)
-```
-using the generic first order syntax depending on the choice of `Base`.
+
 
