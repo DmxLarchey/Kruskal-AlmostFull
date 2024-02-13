@@ -56,8 +56,8 @@ Section list_prod_t.
 
 End list_prod_t.
 
-Fact map_list_prod X Y Z K f (g : Z → K) l m :
-     map g (@list_prod X Y Z f l m) = list_prod (λ x y, g (f x y)) l m.
+Fact map_list_prod X Y Z K (f : X → Y → Z) (g : Z → K) l m :
+     map g (list_prod f l m) = list_prod (λ x y, g (f x y)) l m.
 Proof.
   unfold list_prod.
   rewrite !flat_map_concat_map, concat_map.
@@ -67,8 +67,8 @@ Proof.
   now intros; rewrite map_map.
 Qed.
 
-Fact list_prod_map X X' Y Y' Z f (g : X → X') (h : Y → Y') l m :
-       @list_prod _ _ Z f (map g l) (map h m)
+Fact list_prod_map X X' Y Y' Z (f : X' → Y' → Z) (g : X → X') (h : Y → Y') l m :
+        list_prod f (map g l) (map h m)
       = list_prod (λ x y, f (g x) (h y)) l m.
 Proof.
   unfold list_prod.
@@ -86,8 +86,8 @@ Section list_fan_t.
 
   Fixpoint list_fan (lw : list (list X)) :=
     match lw with
-      | [] => []::[]
-      | w::lw => list_prod (@cons _) w (list_fan lw)
+    | [] => []::[]
+    | w::lw => list_prod (@cons _) w (list_fan lw)
     end.
 
   Fact list_fan_length lw : ⌊list_fan lw⌋ = fold_right (λ x y, ⌊x⌋*y) 1 lw.

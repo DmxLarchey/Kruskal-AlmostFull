@@ -125,12 +125,12 @@ Proof. intros []; apply af_eq_fin_strong; eauto. Qed.
 (** identity is included in any af/afs relation *)
 
 Proposition afs_eq_lower X (P : rel₁ X) (R : rel₂ X) :
-        afs P R -> ∀x, P x → R x x.
+        afs P R → ∀x, P x → R x x.
 Proof.
   intros H x Hx.
   apply afs_iff_af_sub_rel in H.
   destruct (af_af_rec_fun H (fun _ => exist _ x Hx))
-    as (n & _ & _ & _ & Hn); auto.
+    as (? & _ & _ & _ & ?); auto.
 Qed.
 
 Proposition af_eq_lower X R :

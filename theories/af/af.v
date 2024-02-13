@@ -90,10 +90,11 @@ Section af_rel_morph.
 
   Variables (X Y : Type) (f : X → Y → Prop)
             (R : rel₂ X) (T : rel₂ Y)
-            (Hf : ∀y, ∃ₜ x, f x y)                                         (** f is surjective *)
-            (HRT : ∀ x₁ x₂ y₁ y₂, f x₁ y₁ → f x₂ y₂ → R x₁ x₂ → T y₁ y₂).  (** f is a morphism form R to S *)
+            (Hf : ∀y, ∃ₜ x, f x y)                                        (** f is surjective *)
+            (HRT : ∀ x₁ x₂ y₁ y₂, f x₁ y₁ → f x₂ y₂ → R x₁ x₂ → T y₁ y₂)  (** f is a morphism form R to S *)
+            .
 
-  Theorem af_rel_morph : af R -> af T.
+  Theorem af_rel_morph : af R → af T.
   Proof.
     intros H; revert H T HRT.
     induction 1 as [ R HR | R HR IHR ]; intros T HT.
@@ -101,8 +102,7 @@ Section af_rel_morph.
       destruct (Hf y1); destruct (Hf y2); eauto.
     + constructor 2; intros z.
       destruct (Hf z) as (x0 & Hx0).
-      apply IHR with (x := x0).
-      clear HR IHR; firstorder.
+      apply IHR with (x := x0); firstorder.
   Qed.
 
 End af_rel_morph.
@@ -138,8 +138,8 @@ End afs_rel_morph.
 
 Tactic Notation "af" "rel" "morph" uconstr(g) :=
   match goal with
-    | |- af _ -> af _ => apply af_rel_morph with (f := g)
-    | |- afs _ _ -> afs _ _ => apply afs_rel_morph with (f := g)
+    | |- af _ → af _ => apply af_rel_morph with (f := g)
+    | |- afs _ _ → afs _ _ => apply afs_rel_morph with (f := g)
   end.
 
 (** af rel morph is a very versatile tool *)

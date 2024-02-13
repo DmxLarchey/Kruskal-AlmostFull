@@ -28,65 +28,60 @@ Section af_intersection.
 
   Local Lemma af_zero_inter_rec A B R :
                  af R
-           → ∀C, (∀ x y, R x y → C x y ∨ A)
+           → ∀C, R ⊆₂ C ∪₂ (λ _ _, A)
                → af (λ x y, C x y ∨ B)
                → af (λ x y, C x y ∨ A ∧ B).
   Proof.
     induction 1 as [ R HR | R HR1 HR2 ]; intros C HC HB.
     + apply af_mono with (2 := HB).
       intros x y []; auto.
-      specialize (HR x y); apply HC in HR; tauto.
-    + constructor 2; intros x.
-      apply af_mono with (R := fun y z => (C y z \/ C x y) \/ A /\ B).
+      generalize (HC _ _ (HR x y)); tauto.
+    + constructor 2; intros a.
+      apply af_mono with (R := fun x y => (C x y \/ C a x) \/ A /\ B).
       1: squeeze.
-      apply HR2 with x.
+      apply HR2 with a.
       1: intros ? ?; unfold rel_lift; intros [ ?%HC | ?%HC ]; tauto.
-      apply af_mono with (2 := HB); firstorder.
+      apply af_mono with (2 := HB); tauto.
   Qed.
 
   Local Lemma af_zero_inter R A B :
         af (λ x y, R x y ∨ A)
       → af (λ x y, R x y ∨ B)
       → af (λ x y, R x y ∨ A ∧ B).
-  Proof.
-    intros H.
-    apply af_zero_inter_rec with (1 := H).
-    intros; tauto.
-  Qed.
+  Proof. intro H; now apply af_zero_inter_rec with (1 := H). Qed.
 
   Local Lemma af_one_inter_rec A B R :
                   af R
             → ∀T, af T
-            → ∀C, (∀ x y, R x y → C x y ∨ A x)
-                → (∀ x y, T x y → C x y ∨ B x)
+            → ∀C, R ⊆₂ C ∪₂ (λ x _, A x)
+                → T ⊆₂ C ∪₂ (λ x _, B x)
                 → af (λ x y, C x y ∨ A x ∧ B x).
   Proof.
     induction 1 as [ R HR | R HR IHR ].
-    1:{ intros T HT C Req Teq.
+    1:{ intros T HT C HRC HTC.
         eapply af_mono with (2 := HT).
-        intros x y; generalize (Req x y) (Teq x y) (HR x y); tauto. }
+        intros x y; generalize (HRC x y) (HTC x y) (HR x y); tauto. }
     induction 1 as [ T HT | T HT IHT ].
-    1: { intros C Req Teq.
-         apply af_mono with (R := R).
-         intros x y; generalize (HT x y) (Req x y) (Teq x y); tauto.
-         constructor 2; apply HR. }
-    intros C Req Teq.
-    constructor 2; intros x.
+    1: { intros C HRC HTC.
+         apply af_mono with (R := R); eauto.
+         intros x y; generalize (HT x y) (HRC x y) (HTC x y); tauto. }
+    intros C HRC HTC.
+    constructor 2; intros a.
     generalize (af_lift HT); intros HT'.
-    apply af_mono with (R := fun y z : X => ((C y z \/ A y /\ B y) \/ C x y) \/ A x /\ B x).
+    apply af_mono with (R := fun x y => ((C x y \/ A x /\ B x) \/ C a x) \/ A a /\ B a).
     1: squeeze.
     apply af_zero_inter.
-    + generalize (IHR x _ HT' (fun y z => C y z \/ C x y \/ A x)); intros G0.
+    + generalize (IHR a _ HT' (fun x y => C x y \/ C a x \/ A a)); intros G0.
       eapply af_mono.
       2:{ apply G0.
-          intros y z; generalize (Req y z) (Req x y); unfold rel_lift; tauto.
-          intros y z Hyz; generalize (Teq y z); tauto. }
+          + intros x y; generalize (HRC x y) (HRC a x); unfold rel_lift; tauto.
+          + intros x y ?; generalize (HTC x y); tauto. }
       squeeze.
-    + generalize (IHT x (fun y z => C y z \/ C x y \/ B x)); intros G0.
+    + generalize (IHT a (fun x y => C x y \/ C a x \/ B a)); intros G0.
       eapply af_mono.
       2:{ apply G0.
-          intros y z; generalize (Req y z) (Req x y); tauto.
-          intros y z [ H1 | H1 ]; apply Teq in H1; tauto. }
+          + intros x y; generalize (HRC x y) (HRC a x); tauto.
+          + intros ? ? [ ?%HTC | ?%HTC ]; tauto. }
       squeeze.
   Qed.
 
@@ -101,16 +96,15 @@ Section af_intersection.
 
   Theorem af_inter R T : af R → af T → af (R ∩₂ T).
   Proof.
-    intros HR HT.
-    revert R HR T HT.
-    induction 1 as [ R HR | R HR IHR ].
-    1: intros T HT; apply af_mono with (2 := HT); squeeze.
-    induction 1 as [ T HT | T HT IHT ].
-    1: apply af_mono with (2 := af_lift HR); squeeze.
-    constructor 2; intros x; unfold rel_lift.
+    intros HR HT; revert R HR T HT.
+    induction 1 as [ R HR | R HR%af_lift IHR ].
+    1: intro; apply af_mono; squeeze.
+    induction 1 as [ T HT | T HT%af_lift IHT ].
+    1: apply af_mono with (2 := HR); squeeze.
+    constructor 2; intros a; unfold rel_lift.
     apply af_one_inter.
-    + apply af_mono with (2 := IHR x _ (af_lift HT)); squeeze.
-    + apply af_mono with (2 := IHT x); squeeze.
+    + apply af_mono with (2 := IHR a _ HT); squeeze.
+    + apply af_mono with (2 := IHT a); squeeze.
   Qed.
 
 End af_intersection.

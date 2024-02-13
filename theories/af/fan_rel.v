@@ -10,7 +10,7 @@
 From Coq
   Require Import Arith Lia List Permutation Relations Utf8.
 
-Require Import base notations fan.list_fan af.bar list_utils.
+Require Import base notations list_fan list_utils bar.
 
 Import ListNotations list_base_notations.
 
@@ -19,7 +19,7 @@ Set Implicit Arguments.
 #[local] Reserved Notation "x '⊳' y" (at level 70, no associativity, format "x  ⊳  y").
 #[local] Reserved Notation "l '⌈' R '⌉' m" (at level 70, no associativity, format "l  ⌈ R ⌉  m").
 
-#[local] Notation monotonic R P := (forall x y, R x y → P x → P y).
+#[local] Notation monotonic R P := (∀ x y, R x y → P x → P y).
 
 Section path.
 
@@ -27,8 +27,8 @@ Section path.
 
   Fixpoint path n : X → X → Base :=
     match n with
-      | 0   => eq
-      | S n => fun x y => ∃ₜ z, path n x z ∧ₜ R z y
+    | 0   => eq
+    | S n => fun x y => ∃ₜ z, path n x z ∧ₜ R z y
     end.
 
   Fact path_plus n m x y : path (n+m) x y ⇄ₜ ∃ₜ z, path n x z ∧ₜ path m z y.
@@ -100,30 +100,6 @@ Section bar_r.
     intros; subst; eauto.
   Qed.
 
-  (*
-
-   (*  Question: can the problem of equivalence of definitions
-              go away be replacing function nat -> X with weaker
-              "ever expanding sequence"  *)
-
-  Section converse.
-
-   Variable (P : rel₁ X) (x : X)
-            (Hx: forall p : nat -> X -> Base, p 0 x -> (forall n x, p n x -> ∃ₜ y, p (S n) y ∧ₜ x ⊳ y) -> ∃ₜ n y, P y ∧ₜ p n y).
-
-   Let q n x := forall y, path R n x y -> bar_r P y -> bar_r P x.
-
-   Let H0 : q 0 x.
-   Proof. red; simpl; intros; subst; auto. Qed.
-
-   Let H1 : forall n x, q n x -> ∃ₜ y, q (S n) y ∧ₜ x ⊳ y.
-   Proof.
-     unfold q; intros n z Hz.
-
-   Theorem converse : bar_r P x.
-
-   *)
-
 End bar_r.
 
 #[local] Notation barᵣ := bar_r.
@@ -132,8 +108,12 @@ End bar_r.
 
 Section bar_r_map.
 
-  Variables (X Y : Type) (R : X → X → Base) (S : Y → Y → Base) (P : rel₁ X) (f : Y → X)
-            (HRS : ∀ x y, S x y → R (f x) (f y)).
+  Variables (X Y : Type)
+            (P : rel₁ X)
+            (R : X → X → Base)
+            (S : Y → Y → Base) 
+            (f : Y → X)
+            (Hf : ∀ x y, S x y → R (f x) (f y)).
 
   Local Fact bar_r_map_rec x : barᵣ R P x → ∀y, f y = x → barᵣ S (fun y => P (f y)) y.
   Proof. induction 1; intros ? <-; eauto. Qed.
@@ -147,8 +127,8 @@ End bar_r_map.
 
 #[local] Definition is_tl {X} (l m : list X) :=
   match m with
-    | []   => False
-    | _::m => m = l
+  | []   => False
+  | _::m => m = l
   end.
 
 Section bar_r_iff_bar.
@@ -176,8 +156,9 @@ Section list_image.
 
   Implicit Type (l : list X).
 
-  (* Notice the below definition could be informative
-     and thus tell from which x the y is an R-image of *)
+  (* Notice the below definition, depending on Base := Type,
+     could be informative and thus tell from which x 
+     the y is an R-image of *)
 
   Definition list_image l m := ∀y, y ∈ₜ m → ∃ₜ x, x ∈ₜ l ∧ₜ x ⊳ y.
 
@@ -195,10 +176,11 @@ Section list_image.
   Fact list_image_sg_inv x y : [x] ⌈⊳⌉ [y] → x ⊳ y.
   Proof. intros H; destruct (H y) as (? & [ <- | [] ] & ?); auto. Qed.
 
-  Fact list_image_sg x y m : [x] ⌈⊳⌉ m → y ∈ₜ m -> x ⊳ y.
+  Fact list_image_sg x y m : [x] ⌈⊳⌉ m → y ∈ₜ m → x ⊳ y.
   Proof. intros H1 H2; eapply list_image_sg_inv, list_image_In_inv; eauto. Qed.
 
-  Fact list_image_split_inv l1 l2 m : l1++l2 ⌈⊳⌉ m → ∃ₜ m1 m2, m ~ₜ m1++m2 ∧ₜ l1 ⌈⊳⌉ m1 ∧ₜ l2 ⌈⊳⌉ m2.
+  (* Critical lemma here *)
+  Lemma list_image_split_inv l₁ l₂ m : l₁++l₂ ⌈⊳⌉ m → ∃ₜ m₁ m₂, m ~ₜ m₁++m₂ ∧ₜ l₁ ⌈⊳⌉ m₁ ∧ₜ l₂ ⌈⊳⌉ m₂.
   Proof.
     induction m as [ | x m IHm ]; intros H1.
     + exists nil, nil; repeat split; auto; intros ? [].
@@ -238,11 +220,13 @@ Section list_image.
     generalize (H2 _ Hx1); eauto.
   Qed.
 
+  (* F is a FAN for R is it is a finitary branching sub-relation of R *)
+
   Definition is_FAN (F : X → X → Base) := F ⊆₂ R ∧ₜ ∀x, ∃ₜ l, ∀y, F x y ⇄ₜ y ∈ₜ l.
 
   Definition infinite_path (F : X → X → Base) (s : nat → X) := ∀n, F (s n) (s (S n)).
 
-  Fact FAN_list_image :  ∀s : nat → X, infinite_path R s → ∀n, path list_image n [s 0] [s n].
+  Theorem FAN_list_image : ∀s : nat → X, infinite_path R s → ∀n, path list_image n [s 0] [s n].
   Proof.
     intros s H.
     induction n as [ | n IHn ]; simpl; trivial.

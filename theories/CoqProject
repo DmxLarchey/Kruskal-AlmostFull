@@ -8,8 +8,7 @@ base/base.v
 
 list/list_utils.v
 list/list_php.v
-
-fan/list_fan.v
+list/list_fan.v
 
 af/lift.v
 af/pfx_rev.v

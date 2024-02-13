@@ -13,7 +13,7 @@ From Coq
 From KruskalTrees
   Require Import tactics list_utils.
 
-Require Import base notations fan.list_fan bar.
+Require Import base notations list_fan bar.
 
 Import ListNotations.
 
@@ -30,7 +30,13 @@ Section fan_on_list.
   Local Fact P_mono_gen l m : P m → P (l++m).
   Proof. induction l; simpl; auto. Qed.
 
-  Let FAN_from u := λ lw, Forall (λ v, P (v++u)) (list_fan lw).
+  (** FAN_from u for lw = [l1;..;ln] means
+      for every choice sequence [x1;...;xn]
+      (st for any i, xi ∈ li) we have P ([x1;...;xn]++u) 
+      ie however u is prefixed with a choice seq
+      from lw, P holds *)
+
+  Let FAN_from u lw := Forall (λ v, P (v++u)) (list_fan lw).
 
   Local Fact FAN_from_mono u : mono (FAN_from u).
   Proof.
@@ -43,7 +49,7 @@ Section fan_on_list.
 
   Hint Resolve P_mono_gen FAN_from_mono : core.
 
-  Local Fact bar_P_bar_FAN_from u : bar P u → bar (FAN_from u) [].
+  Local Lemma bar_P_bar_FAN_from u : bar P u → bar (FAN_from u) [].
   Proof.
     induction 1 as [ u Hu | u Hu IHu ].
     + constructor 1; unfold FAN_from; simpl; auto.

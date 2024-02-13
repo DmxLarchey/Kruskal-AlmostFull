@@ -23,7 +23,7 @@ Section bar.
 
   Variable X : Type.
 
-  Implicit Type (P Q : list X → Prop) (f : nat → X).
+  Implicit Type (P Q : rel₁ (list X)) (f : nat → X).
 
   Inductive bar P : list X → Base :=
     | bar_stop l : P l → bar P l
@@ -36,7 +36,7 @@ Section bar.
 
   Notation mono P := (∀ x l, P l → P (x::l)).
 
-  Fact bar_inv_mono P : mono P -> mono (bar P).
+  Fact bar_inv_mono P : mono P → mono (bar P).
   Proof. induction 2; eauto. Qed.
 
   Section bar_app_ind.
@@ -44,15 +44,17 @@ Section bar.
     (** A generalized (non-dependent) induction principle for predicates
         of the form bar P (_++m) *)
 
-    Variable (m : list X) (P : list X → Prop) (Q : list X → Base)
+    Variable (m : list X) (P : rel₁ (list X)) (Q : list X → Base)
              (HQ1 : ∀l, P (l++m) → Q l)
              (HQ2 : ∀l, (∀x, bar P (x::l++m))
                       → (∀x, Q (x::l))
                       → Q l).
 
-    (** Instead of v = l++m, we use Leibniz equality and avoid
-        singleton elimination (of identity) here. We could also
-        use identity in Type instead of Prop *)
+    (** Instead of v = l++m, we use Leibniz equality 
+        ∀K, K v → K (l++m) in Type and avoid
+        singleton elimination (of identity) here.
+        We could also use the identity in Type 
+        instead of Prop to acheive the same *)
 
     Local Fact bar_ind_app v : bar P v → ∀l, (∀K, K v → K (l++m)) → Q l.
     Proof.
@@ -106,7 +108,7 @@ Section bar.
 
   Section bar_inter.
 
-    Variables (P Q : list X → Prop)
+    Variables (P Q : rel₁ (list X))
               (HP : mono P) (HQ : mono Q).
 
     Theorem bar_intersection u : bar P u → bar Q u → bar (P ∩₁ Q) u.
@@ -121,16 +123,16 @@ End bar.
 Section bar_relmap.
 
   Variables (X Y : Type) (f : X → Y → Prop)
-            (R : list X → Prop) (S : list Y → Prop)
-            (Hf : ∀y, ∃ₜ x, f x y)                     (* f is surjective *)
-            (HRS : ∀ l m, Forall2 f l m → R l → S m)   (* f is a morphism form R to S *)
+            (R : rel₁ (list X)) (T : rel₁ (list Y))
+            (Hf : ∀y, ∃ₜ x, f x y)                     (** f is surjective *)
+            (HRT : ∀ l m, Forall2 f l m → R l → T m)   (** f is a morphism form R to T *)
             .
 
-  Theorem bar_relmap l m : Forall2 f l m → bar R l → bar S m.
+  Theorem bar_relmap l m : Forall2 f l m → bar R l → bar T m.
   Proof.
-    intros H1 H2; revert H2 m H1 S HRS.
-    induction 1 as [ l Hl | l Hl IHl ]; intros m H1 S HRS.
-    * constructor 1; revert Hl; apply HRS; auto.
+    intros H1 H2; revert H2 m H1 T HRT.
+    induction 1 as [ l Hl | l Hl IHl ]; intros m H1 T HRT.
+    * constructor 1; revert Hl; apply HRT; auto.
     * constructor 2; intros y.
       destruct (Hf y) as (x & Hx).
       apply (IHl x); auto.
@@ -140,9 +142,9 @@ End bar_relmap.
 
 Section bar_map.
 
-  Variables (A B : Type) (f : A → B) (Hf : ∀b, ∃ₜ a, b = f a)
-            (P : list A -> Prop)
-            (Q : list B -> Prop)
+  Variables (X Y : Type) (f : X → Y) (Hf : ∀y, ∃ₜ x, y = f x)
+            (P : rel₁ (list X))
+            (Q : rel₁ (list Y))
             (HPQ1 : ∀l, P l → Q (map f l))
             (HPQ2 : ∀l, Q (map f l) → P l).
 
@@ -169,7 +171,7 @@ Section bar_map_fun.
 
   Variable (X Y : Type) (f : X → Y) (P : rel₁ (list Y)).
 
-  Local Fact bar_map_fun_rec l : bar P l → ∀m, (∀K, K l → K (map f m)) → bar (λ l, P (map f l)) m.
+  Local Lemma bar_map_fun_rec l : bar P l → ∀m, (∀K, K l → K (map f m)) → bar (λ l, P (map f l)) m.
   Proof.
     induction 1 as [ | l Hl IHl ]; intros m Hm; eauto.
     + constructor 1; now apply Hm.
@@ -181,8 +183,11 @@ Section bar_map_fun.
 
   Hint Resolve bar_map_fun_rec : core.
 
-  Fact bar_map_fun_nil : bar P [] → bar (λ l, P (map f l)) [].
+  Lemma bar_map_fun l : bar P (map f l) → bar (λ l, P (map f l)) l.
   Proof. eauto. Qed.
+
+  Lemma bar_map_fun_nil : bar P [] → bar (λ l, P (map f l)) [].
+  Proof. exact (bar_map_fun []). Qed.
 
 End bar_map_fun.
 
