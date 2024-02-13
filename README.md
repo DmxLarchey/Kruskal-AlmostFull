@@ -117,7 +117,11 @@ using the generic first order syntax depending on the choice of `Base`.
 
 The installation procedure compiles the code base twice: 
 - once under the choice `Base := Prop` and it installs the `KruskalAfProp` library;
-- and once under the choice `Base := Type` and it installs the `KruskalAfType`.
+- and once under the choice `Base := Type` and it installs the `KruskalAfType` library.
+
+Then both `KruskalAfProp` and `KruskalAfType` can be imported from at the same
+time but there namespace overlap and it is advised not to load both. The idea
+is to write code that works with either choice.
 
 From the point of view of the _external interface_ of the library, 
 if one wants the `Base := Prop` choice, then the import command would be:
