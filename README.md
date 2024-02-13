@@ -81,7 +81,7 @@ they are computer generated in this library.
 
 To deal with the `Prop` vs `Type` choice, we define a type notation
 `Base` which is either `Base := Prop` or `Base := Type` and, consistently
-with this choice, notations for first order like operators described
+with this choice, notations for first order like connectives described
 below:
 ```
 +------+-----------+---------+----------+--------------+
@@ -91,7 +91,15 @@ below:
 | Type | Empty_set | + / sum | * / prod | { & } / sigT |
 +------+-----------+---------+----------+--------------+
 ```
-Hence, the generic definition of `af` becomes
+The _if and only if_ connective is also defined as 
+`⇄ₜ` but it is not primitive, ie it is a combination
+of `∧ₜ` and the arrow `→`. Notice that universal
+quantification `∀` (and its restriction, the arrow `→`)
+are naturally parametric in the `Prop` vs `Type` choice
+(they are not inductive) whereas the other above (eg. `or` and
+`ex`) are not parametric (and they are inductivelly defined).
+
+In that setting, the parametric definition of `af` becomes
 ```coq
 Inductive af {X} (R : X → X → Prop) : Base :=
   | af_full : (∀ x y, R x y) → af R
