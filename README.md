@@ -115,8 +115,12 @@ using the generic first order syntax depending on the choice of `Base`.
 
 # The external interface
 
-From the point of view of the external interface, if one wants
-the `Base := Prop` choice, then the import command would be:
+The installation procedure compiles the code base twice: 
+- once under the choice `Base := Prop` and it installs the `KruskalAfProp` library;
+- and once under the choice `Base := Type` and it installs the `KruskalAfType`.
+
+From the point of view of the _external interface_ of the library, 
+if one wants the `Base := Prop` choice, then the import command would be:
 ```coq
 From KruskalAfProp Require Export base almost_full.
 ```
@@ -128,7 +132,8 @@ From KruskalAfType Require Export base almost_full.
 
 It is recommanded to perform this import in a single file using
 the `Export` directive so that `Base` would be properly defined
-in every single file importing the library.
+uniformyl in every single file importing the library.
+
 
 
 
