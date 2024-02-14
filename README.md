@@ -37,7 +37,8 @@ It can be installed via `opam` and requires
 - [Kruskal-Trees](https://github.com/DmxLarchey/Kruskal-Trees)
 - [Kruskal-Finite](https://github.com/DmxLarchey/Kruskal-Finite)
 
-It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...` (see below).
+It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...`,
+see section on the external interface below.
   
 # Overview of the definitions
 
