@@ -71,6 +71,30 @@ In the `Type` case, the `af` predicate is _more informative_ (and
 indeed stronger) than in the `Prop` case: it contains a computational
 contents.
 
+# Some results contained in this library
+
+We give a non-exhaustive summary of the main results contained in this library:
+```coq
+Theorem af_le_nat : af ≤. 
+Theorem af_finite X : (∃l : list X, ∀x, x ∊ l) → af (@eq X).
+Theorem af_inter X (R T : X → X → Prop), af R → af T → af (R ∩₂ T).
+Theorem af_product X (R T : X → X → Prop), af R → af T → af (R ⨯ T).
+```
+- in `af_le_nat`, the relation `_ ≤ _ : nat → nat → Prop` is the _less-than_ (or natural) ordering on natural numbers;
+- `af_finite` means that if a type `X` is listable, then equality on that type of `af`;
+- `af_inter` is Coquand's _et al_ constructive version of _Ramsey's theorem_ and `af_product` an immediate consequence of it.
+
+By iterating over `n`, we lift the binary product to `n`-ary products, ie vectors:
+```coq
+Theorem af_vec_product : ∀ (n : nat) (X : Type) (R : rel₂ X) : af R → af (vec_fall2 R n).
+```
+where `vec_fall2 R n := λ v w : vec X n, ∀i, R u⦃i⦄ v⦃i⦄`.
+
+Combining `af_le_nat`, `af_vec_product` and `af_recursion` (see below), we get eg Dickson's lemma:
+```coq
+Theorem Dickson_lemma : ∀ n (f : nat → vec nat n), ∃ a b, a < b ⋀ ∀i, (f a)⦃i⦄ ≤ (f b)⦃i⦄.
+```
+
 # Dealing with `Prop` vs `Type`
 
 The library deals with both versions in a _generic way_, using
