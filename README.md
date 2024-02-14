@@ -106,7 +106,7 @@ Inductive af {X} (R : X → X → Prop) : Base :=
   | af_lift : (∀ a, af (R↑a)) → af R.
 ```
 
-To be complete, the classical property of WQOs is stated (and proved) as:
+To be complete, the property classically characterising WQOs is stated (and proved) as
 ```coq
 af_recursion : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R fᵢ fⱼ
 ```
@@ -114,7 +114,10 @@ using the generic first order syntax depending on the choice of `Base`:
 - when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`;
 - when `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }`;
 
-The existential quantifiers binding `i` and `j` which are non-informative in either case. See the discussion below for more details on the proof of `af_recursion` and the computational contents of the `af` predicate.
+The existential quantifiers binding `i` and `j` are non-informative in either case. The `af R` predicate does not contain 
+enough information to compute the exact position of a good pair. Only a bound under which one such pair must exist can be
+extracted. See the discussion below for more details on the proof of `af_recursion` and the computational contents 
+of the `af` predicate.
 
 # Some results contained in Kruskal-AlmostFull
 
@@ -131,7 +134,7 @@ Theorem af_product X (R T : X → X → Prop) : af R → af T → af (R ⨯ T).
 - `af_inter` is _Coquand's et al_ constructive version of [_Ramsey's theorem_](https://en.wikipedia.org/wiki/Ramsey%27s_theorem) 
 and `af_product` an immediate consequence of it.
 
-By iterating over `k`, we lift the binary product to `k`-ary products, ie vectors in type `vec X k`:
+By iterating over `k`, we lift the binary product to `k`-ary products, ie vectors of type `vec X k`:
 ```coq
 Theorem af_vec_product k X (R : X → X → Prop) : af R → af (vec_fall2 R k).
 ```
@@ -141,6 +144,11 @@ Combining `af_le_nat`, `af_vec_product` and `af_recursion`, we get [_Dickson's l
 ```coq
 Theorem Dickson_lemma k : ∀f : nat → vec nat k, ∃ₜ n ∃ i j, i < j < n ∧ ∀p, fᵢ⦃p⦄ ≤ fⱼ⦃p⦄.
 ```
+but because the relation `_ ≤ _` is _decidable_, we can derive the stronger form
+```coq
+Theorem Dickson_lemma_strong k : ∀f : nat → vec nat k, ∃ₜ i j, i < j ∧ ∀p, fᵢ⦃p⦄ ≤ fⱼ⦃p⦄.
+```
+hence a computation of a good pair, not just a bound.
 
 # The external interface
 

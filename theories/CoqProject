@@ -23,3 +23,7 @@ af/af_ramsey.v
 af/af_tools.v
 af/af_wf.v
 af/almost_full.v
+
+applications/compute_opair.v
+applications/dickson_lemma.v
+
