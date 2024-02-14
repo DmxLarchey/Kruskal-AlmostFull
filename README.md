@@ -113,7 +113,8 @@ af_recursion : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f 
 using the generic first order syntax depending on the choice of `Base`:
 - when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`;
 - when `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }`;
-The existential quantifiers binding `i` and `j` which are non-informative in either case.
+
+The existential quantifiers binding `i` and `j` which are non-informative in either case. See the discussion below for more details on the proof of `af_recursion` and the computational contents of the `af` predicate.
 
 # The external interface
 
@@ -142,9 +143,9 @@ uniformyl in every single file importing the library.
 
 # The computation contents of the `af` predicate
 
-We elaborate on the _computational contents_ of the `af` predicate in
-case the choice `Base := Type` was made. A way to look at it is to
-study the proof term for `af_recursion` which is the following:
+We elaborate on the _computational contents_ (CC) of the `af` predicate in case the choice `Base := Type` was made. The CC is also meaningful when `Base := Prop` however, as is the convention with Coq, that CC lives in the `Prop` realm and its contents cannot lak in the `Type` realm. 
+
+A way to look at the CC is to study the proof term for `af_recursion` which is the following:
 ```coq
 Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧ R (f i) (f j) } :=
   match a with
