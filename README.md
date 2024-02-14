@@ -189,20 +189,23 @@ It is recommanded to perform this import in a single file using
 the `Export` directive so that `Base` would be properly defined
 uniformyl in every single file importing the library.
 
-# The computation contents of the `af` predicate
+# The computational contents of the `af` predicate
 
 We elaborate on the _computational contents_ (CC) of the `af` predicate in case the choice `Base := Type` was made. The CC is also meaningful when `Base := Prop` however, as is conventional in Coq, that CC is sandboxed in the `Prop` realm, and it cannot leak in the `Type` realm. 
 
-A way to look at the CC is to study the proof term for `af_recursion` which is the following:
+A way to look at the CC is to study the proof term for `af_recursion` which would be the following
 ```coq
 Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧ R fᵢ fⱼ } :=
   match a with
-  | af_full h => existT _ 2 [PO₁]
+  | af_full h => exist _ 2 [PO₁]
   | af_lift h => let (n,hn) := af_recursion (h (f 0)) (λ x, f (S x)) in
-                 existT _ (S n) [PO₂]
+                 exist _ (S n) [PO₂]
   end.
 ```
-We see that it proceeds as a fixpoint by structural recursion on the `af R` predicate:
+in programming style where proofs are just Coq lambda-terms. It is easier to analyse the CC
+in this form of proofs rather than `Ltac` style proofs.
+
+We see that it proceeds as a fixpoint by structural recursion on the proof of the `af R` predicate:
 - when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R f₀ f₁`, which is denoted as `[PO₁]` above;
 - when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, by a recursive call on the proof `h f₀ : af (R↑f₀)` to get a bound `n` for `(λ x, f (S x))` (the tail of the sequence `f`) and state that `S n` is a bound for `f` itself and then prove it as `[PO₂]` above.
 
