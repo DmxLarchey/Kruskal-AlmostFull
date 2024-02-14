@@ -42,7 +42,7 @@ where "R↑a" := (λ x y, R x y ∨ R a x).
 
 From this definition, we can recover the classical property of WQOs:
 ```coq
-∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R (f i) (f j)
+af_recursion : ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R (f i) (f j)
 ```
 where the type `X` is not explicited: this means that any (infinite) 
 sequence `f : nat → X` contains a _good pair_ (ie increasing, `i < j` and
@@ -58,7 +58,7 @@ Inductive af {X : Type} (R : X → X → Prop) : Type :=
 ```
 In that case, the classical property we derive is more informative:
 ```coq
-∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R (f i) (f j) }
+af_recursion : ∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R (f i) (f j) }
 ```
 and read as follows: for any sequence `f : nat → X`, _one can
 compute a bound_ (from information contained in both `af R` and `f`)
@@ -113,6 +113,8 @@ stated (and proved) as:
 ```
 using the generic first order syntax depending on the choice of `Base`.
 
+Notice that when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`. In the case `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }` but not those binding `i` and `j` which are always non-informative.
+
 # The external interface
 
 The installation procedure compiles the code base twice: 
@@ -138,6 +140,23 @@ It is recommanded to perform this import in a single file using
 the `Export` directive so that `Base` would be properly defined
 uniformyl in every single file importing the library.
 
+# The computation contents of the `af` predicate
 
+We elaborate on the _computational contents_ of the `af` predicate in
+case the choice `Base := Type` was made. A way to look at it is to
+study the proof term for `af_recursion` which is the following:
+```coq
+Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧ R (f i) (f j) } :=
+  match a with
+  | af_full h => existT _ 2 [PO₁]
+  | af_lift h => let (n,hn) := af_recursion (h (f 0)) (λ x, f (S x)) in
+                 existT _ (S n) [PO₂]
+  end.
+```
+We see that it proceeds as a fixpoint by structural recursion on the `af R` predicate:
+- when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R (f 0) (f 1)`, which is denoted as `[PO₁]` above;
+- when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, by a recursive call on the proof `h (f 0)` of `af (R↑(f 0))` to get a bound `n` for `(λ x, f (S x))` (ie the tail of the sequence `f`) and state that `S n` is a bound for `f` itself and then prove it as `[PO₂]` above.
+
+Hence, we can view the computational contents of `a : af R` as a well-founded tree and use `f` to traverse a branch, selecting the upper node with `f 0`, the tail of `f` being the remainder of the branch. The number of nodes crossed until we find a full relation gives the bound. 
 
 

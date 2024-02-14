@@ -27,6 +27,9 @@ Inductive afs {X} (P : rel₁ X) (R : rel₂ X) : Base :=
   | afs_full : (∀ x y, P x → P y → R x y) → afs P R
   | afs_lift : (∀ x, P x → afs P (R↑x)) → afs P R.
 
+Arguments af_full {_ _}.
+Arguments af_lift {_ _}.
+
 #[global] Hint Constructors af afs : core.
 
 Fact af_mono X (R T : rel₂ X) : R ⊆₂ T → af R → af T.
@@ -178,6 +181,20 @@ Proof.
   + intros []; simpl; eauto.
   + intros ? ? [] [] -> ->; simpl; tauto.
 Qed.
+
+Theorem af_recursion X : ∀ (R : rel₂ X), af R → ∀f, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j).
+Proof.
+  refine (fix loop {R} a f { struct a } :=
+    match a with
+    | af_full h => _
+    | af_lift h => let (n,hn) := loop (h (f 0)) (λ n, f (S n)) in _
+    end).
+  + exists 2. 
+    abstract (exists 0, 1; split; auto).
+  + exists (S n). 
+    abstract (destruct hn as (i & j & Hij & [ H | H ]); 
+      [ exists (S i), (S j) | exists 0, (S i) ]; split; auto; tlia).
+Defined.
 
 Section af_recursion_total.
 
