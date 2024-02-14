@@ -52,7 +52,7 @@ where "R↑a" := (λ x y, R x y ∨ R a x).
 
 From this definition, we recover the property characterising WQOs _classically_:
 ```coq
-af_recursion : ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R fᵢ fⱼ
+af_recursion : af R → ∀f : nat → X, ∃ i j, i < j ∧ R fᵢ fⱼ
 ```
 where the type `X` is not explicited: this means that any (infinite) sequence `f : nat → X` 
 contains a _good pair_ (ie increasing: both `i < j` and `R fᵢ fⱼ` hold). Notice that 
@@ -70,7 +70,7 @@ Inductive af {X : Type} (R : X → X → Prop) : Type :=
 ```
 In that case, the `af_recursion` we derive is more informative:
 ```coq
-af_recursion : ∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R fᵢ fⱼ }
+af_recursion : af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R fᵢ fⱼ }
 ```
 and read as follows: for any sequence `f : nat → X`, _one can
 compute a bound_ (from information contained in both `af R` and `f`)
@@ -121,7 +121,7 @@ Inductive af {X} (R : X → X → Prop) : Base :=
 To be complete, with [`af_recursion`](theories/af/af.v), we get
 a refinement of the property classically characterising WQOs, stated (and proved) as
 ```coq
-Theorem af_recursion X : ∀R : X → X → Prop, af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R fᵢ fⱼ
+Fact af_recursion X (R : X → X → Prop) : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R fᵢ fⱼ
 ```
 using the generic first order syntax depending on the choice of `Base`:
 - when `Base := Prop`, the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` expands to `∃ n i j, i < j < n ∧ ...` 
