@@ -106,14 +106,11 @@ Inductive af {X} (R : X → X → Prop) : Base :=
   | af_lift : (∀ a, af (R↑a)) → af R.
 ```
 
-To be complete, in this setting, the classical property of WQOs is
-stated (and proved) as:
+To be complete, the classical property of WQOs is stated (and proved) as:
 ```coq
-   af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j)
+af_recursion : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j)
 ```
-using the generic first order syntax depending on the choice of `Base`.
-
-Notice that when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`. In the case `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }` but not those binding `i` and `j` which are always non-informative.
+using the generic first order syntax depending on the choice of `Base`. Notice that when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`. In the case `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }` but not those binding `i` and `j` which are always non-informative.
 
 # The external interface
 
