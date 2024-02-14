@@ -130,8 +130,8 @@ which in turn is logically equivalent to `∃ i j, i < j ∧ ...`;
 
 The existential quantifiers binding `i` and `j` are non-informative in either case. As hinted above, 
 the `af R` predicate itself does not contain enough information to compute the exact position of a good pair.
-Only a bound under which one such pair must exist can be extracted. Provided that we are given a decider 
-for the relation `R`, this bound can then be used to compute a good pair using exhaustive finitary search.
+Only a bound under which one such pair must exist can be extracted. Provided that we are given a _decision procedure_ 
+for the relation `R`, this bound can then be used to compute a good pair using _exhaustive finitary search_.
 
 See the discussion below for more details on the proof of `af_recursion` and 
 the computational contents of the `af` predicate.
@@ -154,25 +154,25 @@ and [`af_product`](theories/af/af_tools.v) an immediate consequence of it.
 - by `af_product` iterating over `k` times, we lift the binary product to `k`-ary products, ie vectors of type `vec X k`
 and obtain [`af_vec_fall2`](theories/af/af_tools.v) where `vec_fall2 R k := λ v w : vec X k, ∀p : idx k, R u⦃p⦄ v⦃p⦄`.
 
-Combining `af_le_nat`, `af_vec_fall2` and `af_recursion`, we get [_Dickson's lemma_](https://en.wikipedia.org/wiki/Dickson%27s_lemma):
+Combining `af_le_nat`, `af_vec_fall2` and `af_recursion`, we get [Dickson_lemma](theories/applications/dickson_lemma.v):
 ```coq
 Theorem Dickson_lemma k : ∀f : nat → vec nat k, ∃ₜ n ∃ i j, i < j < n ∧ ∀p, fᵢ⦃p⦄ ≤ fⱼ⦃p⦄.
 ```
-but because the relation `_ ≤ _` is _decidable_, we can derive the stronger form
+and, because the relation `_ ≤ _` over `nat` is _decidable_, we can derive the stronger form
 ```coq
 Theorem Dickson_lemma_strong k : ∀f : nat → vec nat k, ∃ₜ i j, i < j ∧ ∀p, fᵢ⦃p⦄ ≤ fⱼ⦃p⦄.
 ```
-hence a computation of a good pair, not just a bound.
+hence a computation of a good pair (not just a bound) (when `Base := Type`).
 
 # The external interface
 
-The installation procedure compiles the code base twice: 
+The installation procedure _compiles the code base twice_: 
 - once under the choice `Base := Prop` and it installs the `KruskalAfProp` library;
 - and once under the choice `Base := Type` and it installs the `KruskalAfType` library.
 
 Then both `KruskalAfProp` and `KruskalAfType` can be imported from at the same
-time but there namespace overlap and it is advised not to load both. The idea
-is to write code that works with either choice.
+time but there namespaces overlap and it is strongly advised not to load both.
+The intent is to write code that works with either choice.
 
 From the point of view of the _external interface_ of the library, 
 if one wants the `Base := Prop` choice, then the import command would be:
