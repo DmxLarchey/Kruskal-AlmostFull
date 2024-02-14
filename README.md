@@ -11,9 +11,9 @@
 
 # What is this library?
 
-This library formalizes in `Coq 8.14+` basic results _Almost Full relations_ in Coq,
+This library formalizes in `Coq 8.14+` basic results _Almost Full relations_ (AF) in Coq,
 a notion defined inductivelly that is the constructive counterpart of the classical
-notion of _Well Quasi Order_ (WQO). The results contained in here are:
+notion of [_Well Quasi Order_](https://en.wikipedia.org/wiki/Well-quasi-ordering) (WQO). The results contained in here are:
 - the `af R` predicate (see below) characterizing AF relations;
 - the equivalence with _Bar inductive predicates_: `af R ↔ bar (good R) []`;
 - stability properties for `af`/`bar`:
@@ -40,13 +40,13 @@ Inductive af {X : Type} (R : X → X → Prop) : Prop :=
 where "R↑a" := (λ x y, R x y ∨ R a x).
 ```
 
-From this definition, we can recover the property characterising WQOs classically:
+From this definition, we recover the property characterising WQOs _classically_:
 ```coq
 af_recursion : ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R fᵢ fⱼ
 ```
 where the type `X` is not explicited: this means that any (infinite) sequence `f : nat → X` 
 contains a _good pair_ (ie increasing, `i < j` and `R fᵢ fⱼ` at the same time). Notice that 
-the `af R` predicate is constructivelly stronger than its classical characterisation.
+the `af R` predicate is _constructivelly stronger_ than its classical characterisation.
 
 An alternative characterization can be implemented at `Type` level
 instead of the `Prop` level (non-informative) with the __nearly__
