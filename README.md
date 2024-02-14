@@ -207,8 +207,12 @@ in this form of proofs rather than `Ltac` style proofs.
 
 We see that it proceeds as a fixpoint by structural recursion on the proof of the `af R` predicate:
 - when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R f₀ f₁`, which is denoted as `[PO₁]` above;
-- when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, by a recursive call on the proof `h f₀ : af (R↑f₀)` to get a bound `n` for `(λ x, f (S x))` (the tail of the sequence `f`) and state that `S n` is a bound for `f` itself and then prove it as `[PO₂]` above.
+- when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, then a recursive call on the proof `h f₀ : af (R↑f₀)` computes 
+a bound `n` for `R↑f₀` and the tail of the sequence `f` (ie `λ x, f (S x)`), and we state that `S n` is a bound 
+for `f` itself, and then prove it as `[PO₂]` above.
 
-Hence, we can view the computational contents of `a : af R` as a well-founded tree and use `f` to traverse a branch of that tree, selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number of nodes crossed until the `af` tree tells us this relation is full gives the bound `2+n`. 
+Hence, we can view the computational contents of `a : af R` as a _well-founded tree_ and use `f` to traverse a branch of that tree,
+selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number `n` of nodes 
+crossed until the `af` tree tells us this relation is full gives the bound `2+n`.
 
 
