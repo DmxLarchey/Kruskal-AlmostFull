@@ -158,6 +158,6 @@ We see that it proceeds as a fixpoint by structural recursion on the `af R` pred
 - when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R (f 0) (f 1)`, which is denoted as `[PO₁]` above;
 - when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, by a recursive call on the proof `h (f 0) : af (R↑(f 0))` to get a bound `n` for `(λ x, f (S x))` (the tail of the sequence `f`) and state that `S n` is a bound for `f` itself and then prove it as `[PO₂]` above.
 
-Hence, we can view the computational contents of `a : af R` as a well-founded tree and use `f` to traverse a branch of that tree, selecting the upper node with `f 0`, `f 1`, `f 2` successively until the relation `R↑(f 0)...↑(f i)` becomes full. The number of nodes crossed until the `af` tree tells us this relation is full gives the bound. 
+Hence, we can view the computational contents of `a : af R` as a well-founded tree and use `f` to traverse a branch of that tree, selecting the upper node with `f 0`, `f 1`, `f 2` successively until the relation `R↑(f 0)...↑(f (n-1))` becomes full. The number of nodes crossed until the `af` tree tells us this relation is full gives the bound `2+n`. 
 
 
