@@ -45,12 +45,12 @@ From this definition, we recover the property characterising WQOs _classically_:
 af_recursion : ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R fᵢ fⱼ
 ```
 where the type `X` is not explicited: this means that any (infinite) sequence `f : nat → X` 
-contains a _good pair_ (ie increasing, `i < j` and `R fᵢ fⱼ` at the same time). Notice that 
+contains a _good pair_ (ie increasing: both `i < j` and `R fᵢ fⱼ` hold). Notice that 
 the `af R` predicate is _constructivelly stronger_ than its classical characterisation.
 
-An alternative characterization can be implemented at `Type` level
+A variant definition can be implemented at `Type` level (informative)
 instead of the `Prop` level (non-informative) with the __nearly__
-identical definition:
+identical definition (except of the output type):
 ```coq
 Inductive af {X : Type} (R : X → X → Prop) : Type :=
   | af_full : (∀ x y, R x y) → af R
@@ -69,33 +69,7 @@ that initial segment (eg when `R` is not decidable).
 
 In the `Type` case, the `af` predicate is _more informative_ (and
 indeed stronger) than in the `Prop` case: it contains a computational
-contents.
-
-# Some results contained in this library
-
-We give a non-exhaustive summary of the main results contained in this library:
-```coq
-Theorem af_le_nat : af ≤. 
-Theorem af_finite X : (∃l : list X, ∀x, x ∊ l) → af (@eq X).
-Theorem af_inter X (R T : X → X → Prop) : af R → af T → af (R ∩₂ T).
-Theorem af_product X (R T : X → X → Prop) : af R → af T → af (R ⨯ T).
-```
-- in `af_le_nat`, the relation `_ ≤ _ : nat → nat → Prop` is the _less-than_ 
-(or natural) ordering on natural numbers;
-- `af_finite` means that if a type `X` is listable, then equality on that type of `af`;
-- `af_inter` is Coquand's _et al_ constructive version of _Ramsey's theorem_ 
-and `af_product` an immediate consequence of it.
-
-By iterating over `n`, we lift the binary product to `n`-ary products, ie vectors:
-```coq
-Theorem af_vec_product n X (R : X → X → Prop) : af R → af (vec_fall2 R n).
-```
-where `vec_fall2 R n := λ v w : vec X n, ∀i, R u⦃i⦄ v⦃i⦄`.
-
-Combining `af_le_nat`, `af_vec_product` and `af_recursion`, we get [Dickson's lemma](https://en.wikipedia.org/wiki/Dickson%27s_lemma):
-```coq
-Theorem Dickson_lemma n : ∀f : nat → vec nat n, ∃ a b, a < b ⋀ ∀i, (f a)⦃i⦄ ≤ (f b)⦃i⦄.
-```
+contents. See below for a section discussing this question specifically.
 
 # Dealing with `Prop` vs `Type`
 
@@ -141,6 +115,32 @@ using the generic first order syntax depending on the choice of `Base`:
 - when `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }`;
 
 The existential quantifiers binding `i` and `j` which are non-informative in either case. See the discussion below for more details on the proof of `af_recursion` and the computational contents of the `af` predicate.
+
+# Some results contained in Kruskal-AlmostFull
+
+We give a non-exhaustive summary of the main results contained in this library:
+```coq
+Theorem af_le_nat : af ≤. 
+Theorem af_finite X : (∃l : list X, ∀x, x ∊ l) → af (@eq X).
+Theorem af_inter X (R T : X → X → Prop) : af R → af T → af (R ∩₂ T).
+Theorem af_product X (R T : X → X → Prop) : af R → af T → af (R ⨯ T).
+```
+- in `af_le_nat`, the relation `_ ≤ _ : nat → nat → Prop` is the _less-than_ 
+(or natural) ordering on `nat`;
+- `af_finite` means that if a type `X` is listable (finite), then equality on that type is AF;
+- `af_inter` is _Coquand's et al_ constructive version of [_Ramsey's theorem_](https://en.wikipedia.org/wiki/Ramsey%27s_theorem) 
+and `af_product` an immediate consequence of it.
+
+By iterating over `k`, we lift the binary product to `k`-ary products, ie vectors in type `vec X k`:
+```coq
+Theorem af_vec_product k X (R : X → X → Prop) : af R → af (vec_fall2 R k).
+```
+where `vec_fall2 R k := λ v w : vec X k, ∀p : idx k, R u⦃p⦄ v⦃p⦄`.
+
+Combining `af_le_nat`, `af_vec_product` and `af_recursion`, we get [_Dickson's lemma_](https://en.wikipedia.org/wiki/Dickson%27s_lemma):
+```coq
+Theorem Dickson_lemma k : ∀f : nat → vec nat k, ∃ₜ n ∃ i j, i < j < n ∧ ∀p, fᵢ⦃p⦄ ≤ fⱼ⦃p⦄.
+```
 
 # The external interface
 
