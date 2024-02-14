@@ -40,13 +40,13 @@ Inductive af {X : Type} (R : X → X → Prop) : Prop :=
 where "R↑a" := (λ x y, R x y ∨ R a x).
 ```
 
-From this definition, we can recover the classical property of WQOs:
+From this definition, we can recover the property characterising WQOs classically:
 ```coq
-af_recursion : ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R (f i) (f j)
+af_recursion : ∀R, af R → ∀f : nat → X, ∃ i j, i < j ∧ R fᵢ fⱼ
 ```
-where the type `X` is not explicited: this means that any (infinite) 
-sequence `f : nat → X` contains a _good pair_ (ie increasing, `i < j` and
-`R fᵢ fⱼ` at the same time).
+where the type `X` is not explicited: this means that any (infinite) sequence `f : nat → X` 
+contains a _good pair_ (ie increasing, `i < j` and `R fᵢ fⱼ` at the same time). Notice that 
+the `af R` predicate is constructivelly stronger than its classical characterisation.
 
 An alternative characterization can be implemented at `Type` level
 instead of the `Prop` level (non-informative) with the __nearly__
@@ -58,7 +58,7 @@ Inductive af {X : Type} (R : X → X → Prop) : Type :=
 ```
 In that case, the classical property we derive is more informative:
 ```coq
-af_recursion : ∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R (f i) (f j) }
+af_recursion : ∀R, af R → ∀f : nat → X, { n | ∃ i j, i < j < n ∧ R fᵢ fⱼ }
 ```
 and read as follows: for any sequence `f : nat → X`, _one can
 compute a bound_ (from information contained in both `af R` and `f`)
@@ -77,22 +77,24 @@ We give a non-exhaustive summary of the main results contained in this library:
 ```coq
 Theorem af_le_nat : af ≤. 
 Theorem af_finite X : (∃l : list X, ∀x, x ∊ l) → af (@eq X).
-Theorem af_inter X (R T : X → X → Prop), af R → af T → af (R ∩₂ T).
-Theorem af_product X (R T : X → X → Prop), af R → af T → af (R ⨯ T).
+Theorem af_inter X (R T : X → X → Prop) : af R → af T → af (R ∩₂ T).
+Theorem af_product X (R T : X → X → Prop) : af R → af T → af (R ⨯ T).
 ```
-- in `af_le_nat`, the relation `_ ≤ _ : nat → nat → Prop` is the _less-than_ (or natural) ordering on natural numbers;
+- in `af_le_nat`, the relation `_ ≤ _ : nat → nat → Prop` is the _less-than_ 
+(or natural) ordering on natural numbers;
 - `af_finite` means that if a type `X` is listable, then equality on that type of `af`;
-- `af_inter` is Coquand's _et al_ constructive version of _Ramsey's theorem_ and `af_product` an immediate consequence of it.
+- `af_inter` is Coquand's _et al_ constructive version of _Ramsey's theorem_ 
+and `af_product` an immediate consequence of it.
 
 By iterating over `n`, we lift the binary product to `n`-ary products, ie vectors:
 ```coq
-Theorem af_vec_product : ∀ (n : nat) (X : Type) (R : rel₂ X) : af R → af (vec_fall2 R n).
+Theorem af_vec_product n X (R : X → X → Prop) : af R → af (vec_fall2 R n).
 ```
 where `vec_fall2 R n := λ v w : vec X n, ∀i, R u⦃i⦄ v⦃i⦄`.
 
-Combining `af_le_nat`, `af_vec_product` and `af_recursion` (see below), we get eg Dickson's lemma:
+Combining `af_le_nat`, `af_vec_product` and `af_recursion`, we get [Dickson's lemma](https://en.wikipedia.org/wiki/Dickson%27s_lemma):
 ```coq
-Theorem Dickson_lemma : ∀ n (f : nat → vec nat n), ∃ a b, a < b ⋀ ∀i, (f a)⦃i⦄ ≤ (f b)⦃i⦄.
+Theorem Dickson_lemma n : ∀f : nat → vec nat n, ∃ a b, a < b ⋀ ∀i, (f a)⦃i⦄ ≤ (f b)⦃i⦄.
 ```
 
 # Dealing with `Prop` vs `Type`
@@ -132,7 +134,7 @@ Inductive af {X} (R : X → X → Prop) : Base :=
 
 To be complete, the classical property of WQOs is stated (and proved) as:
 ```coq
-af_recursion : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j)
+af_recursion : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R fᵢ fⱼ
 ```
 using the generic first order syntax depending on the choice of `Base`:
 - when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`;
@@ -171,7 +173,7 @@ We elaborate on the _computational contents_ (CC) of the `af` predicate in case 
 
 A way to look at the CC is to study the proof term for `af_recursion` which is the following:
 ```coq
-Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧ R (f i) (f j) } :=
+Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧ R fᵢ fⱼ } :=
   match a with
   | af_full h => existT _ 2 [PO₁]
   | af_lift h => let (n,hn) := af_recursion (h (f 0)) (λ x, f (S x)) in
@@ -179,9 +181,9 @@ Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧
   end.
 ```
 We see that it proceeds as a fixpoint by structural recursion on the `af R` predicate:
-- when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R (f 0) (f 1)`, which is denoted as `[PO₁]` above;
-- when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, by a recursive call on the proof `h (f 0) : af (R↑(f 0))` to get a bound `n` for `(λ x, f (S x))` (the tail of the sequence `f`) and state that `S n` is a bound for `f` itself and then prove it as `[PO₂]` above.
+- when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R f₀ f₁`, which is denoted as `[PO₁]` above;
+- when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, by a recursive call on the proof `h f₀ : af (R↑f₀)` to get a bound `n` for `(λ x, f (S x))` (the tail of the sequence `f`) and state that `S n` is a bound for `f` itself and then prove it as `[PO₂]` above.
 
-Hence, we can view the computational contents of `a : af R` as a well-founded tree and use `f` to traverse a branch of that tree, selecting the upper node with `f 0`, `f 1`, `f 2` successively until the relation `R↑(f 0)...↑(f (n-1))` becomes full. The number of nodes crossed until the `af` tree tells us this relation is full gives the bound `2+n`. 
+Hence, we can view the computational contents of `a : af R` as a well-founded tree and use `f` to traverse a branch of that tree, selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number of nodes crossed until the `af` tree tells us this relation is full gives the bound `2+n`. 
 
 
