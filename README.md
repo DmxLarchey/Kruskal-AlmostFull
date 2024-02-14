@@ -110,7 +110,10 @@ To be complete, the classical property of WQOs is stated (and proved) as:
 ```coq
 af_recursion : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j)
 ```
-using the generic first order syntax depending on the choice of `Base`. Notice that when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`. In the case `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }` but not those binding `i` and `j` which are always non-informative.
+using the generic first order syntax depending on the choice of `Base`:
+- when `Base := Prop` then the formula `∃ₜ n, ∃ i j, i < j < n ∧ ...` means exactly `∃ n i j, i < j < n ∧ ...` which in turn is equivalent to `∃ i j, i < j ∧ ...`;
+- when `Base := Type`, the `∃ₜ n, ...` quantifier is informative, ie identical to `{ n | ... }`;
+The existential quantifiers binding `i` and `j` which are non-informative in either case.
 
 # The external interface
 
