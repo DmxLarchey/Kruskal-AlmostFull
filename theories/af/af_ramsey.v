@@ -30,8 +30,8 @@ Set Implicit Arguments.
 Section af_double_induction.
 
   Variables (X : Type) (P : rel₂ X → rel₂ X → Base)
-            (HP0 : ∀ R T, (∀ x y, R x y) → af T → P R T)
-            (HP1 : ∀ R T, af R → (∀ x y, T x y) → P R T)
+            (HP0 : ∀ (R T : rel₂ X), (∀ x y, R x y) → af T → P R T)
+            (HP1 : ∀ (R T : rel₂ X), af R → (∀ x y, T x y) → P R T)
             (HP2 : ∀ R T, (∀x, P (R↑x) T) → (∀x, P R (T↑x)) → P R T).
 
   Local Theorem af_double_induction R T : af R → af T → P R T.
