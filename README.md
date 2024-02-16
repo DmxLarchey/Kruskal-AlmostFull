@@ -219,14 +219,12 @@ crossed until the `af` tree tells us this relation is full gives the bound `2+n`
 # Relational surjective morphisms
 
 Transporting the AF property from `R : X → X → Prop` to `T : Y → Y → Prop` can be performed using a morphism `f : X → Y` which 
-is an relation preserving function, moreover supposed to be surjective. Hence, proving a statement like
-```coq
-statement ... : af R → af T
-```
-only involves providing `f : X → Y` and proving morphism as `∀ u v, R u v → T fᵤ fᵥ` and surjectivity `∀y, ∃ₜx, y = f x`
-which is very convenient indeed.
+is an relation preserving map, moreover supposed to be surjective. Hence, proving a statement like
+`af R → af T` only involves providing `f : X → Y`, and proving:
+- morphism as `∀ u v, R u v → T fᵤ fᵥ`;
+- and surjectivity `∀ y, ∃ₜ x, y = f x`;
 
-Unfortunately this does not work very well with Σ-types. For instance consider the statement
+which is very convenient indeed. Unfortunately this does not work very well with Σ-types. For instance consider the statement
 ```coq
 af_af_sub_rel X (P : X → Prop) (R : X → X → Prop): af R → af R⇓P
 ```
