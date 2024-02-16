@@ -166,7 +166,7 @@ and, because the relation `_ ≤ _` over `nat` is _decidable_, we can derive the
 ```coq
 Theorem Dickson_lemma_strong k : ∀f : nat → vec nat k, ∃ₜ i j, i < j ∧ ∀p, fᵢ⦃p⦄ ≤ fⱼ⦃p⦄.
 ```
-hence a computation of a good pair (not just a bound) (with the choice `Base := Type`).
+hence a computation of a good pair (not just a bound) (using the `Base := Type` variant).
 
 # The external interface
 
