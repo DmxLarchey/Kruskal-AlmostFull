@@ -24,7 +24,7 @@ The results contained in here are:
   - with a proof of the FAN theorem for inductive bars;
 - critically, closure properties for `af`/`bar`:
   - under _direct products_ and _direct sums_ via Coquand's version Ramsey's theorem;
-  - under relational morphism;
+  - under relational morphism (see section below);
   - `af =` for finite types, `af ≤` for `nat`;
   - closure of `af` under `k`-ary products
 - as a consequence, we get [_Dickson's lemma_](https://en.wikipedia.org/wiki/Dickson%27s_lemma) (see below).
@@ -216,4 +216,11 @@ Hence, we can view the computational contents of `a : af R` as a _well-founded t
 selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number `n` of nodes 
 crossed until the `af` tree tells us this relation is full gives the bound `2+n`.
 
+# Relational morphism
+
+```coq
+statement ... : af R → af T
+```
+
+`af R → af R⇓P` where `R⇓P : {x | P x} → {x | P x} → Prop` is the restriction of `R : X → X → Prop` to the Σ-type `{x | P x}`. 
 

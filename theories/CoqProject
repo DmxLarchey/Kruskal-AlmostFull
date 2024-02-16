@@ -6,9 +6,7 @@ base/base_implem.v
 base/base_def.v
 base/base.v
 
-list/list_utils.v
 list/list_php.v
-list/list_fan.v
 
 af/lift.v
 af/pfx_rev.v
@@ -16,7 +14,6 @@ af/good.v
 af/af.v
 af/bar.v
 af/af_good.v
-af/fan.v
 af/af_eq.v
 af/af_bar.v
 af/af_ramsey.v
