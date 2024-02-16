@@ -47,20 +47,21 @@ see section on [the external interface](#The-external-interface) below.
 
 # Comparisons with the [Almost Full `coq-community` project](https://github.com/coq-community/almost-full)
   
-That project was initiated as the artifact of the paper of Coquand _et al_ [Stop When You Are Almost-Full](https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17). It has not really evolved beyond that goal. There is a `Type`-bounded and a `Prop`-bounded
-version of the library, with a separate code base. There is some overlap in the results: eg Ramsey's theorem (of which
-of own proof is a cleanup/rework a former version of theirs). But the two project head in different directions.
+That project was initiated as the artifact of the paper of Coquand _et al_ [Stop When You Are Almost-Full](https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17). It has not really evolved beyond that goal. As with the current `Kruskal-Almostfull`, there is a `Type`-bounded and a `Prop`-bounded
+version of the `almost-full` library, but they have a disjoint code base. Comparing the contents of the libraries, there is 
+some overlap in the results: eg Ramsey's theorem (of which of our own proof is a cleanup/rework a former version of theirs). 
+But the two projects head in different directions.
 
-The main differences with the current project are (IMHO):
-- the proofs scripts and notations are not really aimed at readability;
+The main differences with the `Kruskal-Almostfull` project are (IMHO):
+- the proofs scripts and notations are not really aimed at user readability;
 - it is not designed as a toolkit for further developments:
   - it is missing a nice tool like surjective relational morphisms;
   - their `af_finite` is much less versatile than our own version which 
     holds for identity over any listable type;
 - it includes, as a sizable code base, examples of termination proofs 
-  for recursive programs, which was the motivation of the paper;
-- our own motivation is to study and provide tools for the closure
-  properties of AF relations. 
+  for recursive programs, which was driving the motivation of their paper;
+- the motivation for `Kruskal-Almostfull` is to study and provide basic but versatile
+  tools for the closure properties of AF relations. 
   
 # Overview of the definitions
 
