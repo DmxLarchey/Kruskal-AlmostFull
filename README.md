@@ -216,12 +216,31 @@ Hence, we can view the computational contents of `a : af R` as a _well-founded t
 selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number `n` of nodes 
 crossed until the `af` tree tells us this relation is full gives the bound `2+n`.
 
-# Relational morphism
+# Relational surjective morphisms
 
+Transporting the AF property from `R : X → X → Prop` to `T : Y → Y → Prop` can be performed using a morphism `f : X → Y` which 
+is an relation preserving function, moreover supposed to be surjective. Hence, proving a statement like
 ```coq
 statement ... : af R → af T
 ```
+only involves providing `f : X → Y` and proving morphism as `∀ u v, R u v → T fᵤ fᵥ` and surjectivity `∀y, ∃ₜx, y = f x`
+which is very convenient indeed.
 
-`af R → af R⇓P` where `R⇓P : {x | P x} → {x | P x} → Prop` is the restriction of `R : X → X → Prop` to the Σ-type `{x | P x}`. 
-`af R↑x₀ → af R⇓(λ x, ¬ R x₀ x).`
+Unfortunately this does not work very well with Σ-types. For instance consider the statement
+```coq
+af_af_sub_rel X (P : X → Prop) (R : X → X → Prop): af R → af R⇓P
+```
+where `R⇓P : {x | P x} → {x | P x} → Prop` is the restriction of `R : X → X → Prop` to the Σ-type `{x | P x}`. 
+There is an "obvious" surjective morphism from `X` to `{x | P x}` except that:
+- it cannot be implemented as a Coq function of type `X → {x | P x}` because the morphism is in fact 
+  a partial function that is not supposed to map value `x` for which `P x` does not hold;
+- it cannot be proved sujective because there is no reason for unicity of the proof of `P x` (unless `P` is eg Boolean).
+
+To avoid these strong impairements, we can instead view the morphism as a _relational_, ie in type `f : X → Y → Prop`.
+Then not only the partiality constraint fades any but also, the morphism can have _several output values_ (possibly
+even infinitely many). In the case of the projection on the Σ-type `{x | P x}`, the morphism `f` is simply
+defined as `f := λ x y, y = π₁ x` and we are done!!
+
+Using relational morphisms it because trivial to establish results like eg `af R↑x₀ → af R⇓(λ x, ¬ R x₀ x)`. The
+converse however does not hold unless `R` is decidable.
 
