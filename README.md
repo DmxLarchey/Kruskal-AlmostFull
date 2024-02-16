@@ -18,6 +18,8 @@ or the more complex [Kruskal's tree theorem](https://en.wikipedia.org/wiki/Krusk
 which are to be provided in upcoming libraries.
 This library is a _major and modular rewrite_ of a somewhat [monolithic development](https://members.loria.fr/DLarchey/files/Kruskal/index.html) 
 concluding in a constructive/inductive proof of Kruskal's tree theorem.
+This library has some overlap with the [Almost Full `coq-community`](https://github.com/coq-community/almost-full) 
+project (see below) but they have different objectives.
 
 We define the notion of AF relation inductively as the constructive counterpart of the classical
 notion of [_Well Quasi Order_](https://en.wikipedia.org/wiki/Well-quasi-ordering) (WQO). 
@@ -42,10 +44,27 @@ It can be installed via `opam` and requires
 
 It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...`,
 see section on [the external interface](#The-external-interface) below.
+
+# Comparisons with the [Almost Full `coq-community` project](https://github.com/coq-community/almost-full)
+  
+That project was initiated as the artifact of the paper of Coquand _et al_ [Stop When You Are Almost-Full](https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17). It has not really evolved beyond that goal. There is a `Type`-bounded and a `Prop`-bounded
+version of the library, with a separate code base. There is some overlap in the results: eg Ramsey's theorem (of which
+of own proof is a cleanup/rework a former version of theirs). But the two project head in different directions.
+
+The main differences with the current project are (IMHO):
+- the proofs scripts and notations are not really aimed at readability;
+- it is not designed as a toolkit for further developments:
+  - it is missing a nice tool like surjective relational morphisms;
+  - their `af_finite` is much less versatile than our own version which 
+    holds for identity over any listable type;
+- it includes, as a sizable code base, examples of termination proofs 
+  for recursive programs, which was the motivation of the paper;
+- our own motivation is to study and provide tools for the closure
+  properties of AF relations. 
   
 # Overview of the definitions
 
-Following the work of Coquand _et al_ in eg [Stop When You Are Almost-Full](https://link.springer.com/chapter/10.1007/978-3-642-32347-8_17),
+Following the work of ,
 we characterize AF relations using an inductive predicate:
 ```coq
 Inductive af {X : Type} (R : X → X → Prop) : Prop :=
