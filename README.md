@@ -242,7 +242,15 @@ instead of type `f : X → Y`. Then:
 - not only the partiality constraint fades away;
 - but also, the morphism can have _several output values_ (possibly even infinitely many).
 
-In the case of the projection on the Σ-type `{x | P x}`, the morphism `f` is simply defined as `f := λ x y, y = π₁ x` and we are done!!
-Using relational morphisms it becomes trivial to establish results like eg `af R↑x₀ → af R⇓(λ x, ¬ R x₀ x)`. Beware the converse implication
-is an involved question related to decidability of `R x₀`.
+In the case of the projection on the Σ-type `{x | P x}`, the morphism `f` is simply defined as `f := λ x y, x = π₁ y` and we are (almost) done!!
+Using relational morphisms it becomes trivial to establish results like eg:
+```coq
+Fact af_lift_af_sub_rel X R (x₀ : X) : af R↑x₀ → af R⇓(λ x, ¬ R x₀ x).
+Proof.
+  af rel morph (λ x y, x =  π₁ y).
+  + intros []; simpl; eauto.
+  + intros ? ? [] [] -> ->; simpl; tauto.
+Qed.
+```
+Beware the converse implication `af R⇓(λ x, ¬ R x₀ x) → af R↑x₀` is an involved question related to the decidability of `R x₀`.
 
