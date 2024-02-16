@@ -213,13 +213,13 @@ We see that it proceeds as a fixpoint by structural recursion on the proof of th
 - when `R` is full, witnessed by `h : ∀ x y, R x y`, then `n := 2` satisfies both `0 < 1 < n` and `R f₀ f₁`, which is denoted as `[PO₁]` above;
 - when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, then a recursive call on the proof `h f₀ : af (R↑f₀)` computes 
 a bound `n` for `R↑f₀` and the tail of the sequence `f` (ie `λ x, f (S x)`), and we state that `S n` is a bound 
-for `f` itself, and then prove it as `[PO₂]` above.
+for `f` itself, and then prove it as `[PO₂]` above;
 - the proof obligations `[PO₁]` and `[PO₂]` are omitted here because do not participate in the CC.
 
 Hence, we can view the computational contents of `a : af R` as containing _well founded tree_ and use `f` to traverse a branch of that tree,
 selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number `n` of nodes 
 crossed until the `af` tree tells us this relation is full gives the bound `2+n`. The well founded tree contained in `a : af R` collects,
-along its branches, bounds on the position of good pairs for every possible sequence of values.
+along its branches, _bounds on the position of good pairs_ for every possible sequence of values.
 
 # Relational surjective morphisms
 
@@ -252,7 +252,7 @@ Using relational morphisms it becomes trivial to establish results like eg:
 ```coq
 Fact af_lift_af_sub_rel X R (x₀ : X) : af R↑x₀ → af R⇓(λ x, ¬ R x₀ x).
 Proof.
-  af rel morph (λ x y, x =  π₁ y).
+  af rel morph (λ x y, x = π₁ y).
   + intros []; simpl; eauto.
   + intros ? ? [] [] -> ->; simpl; tauto.
 Qed.
