@@ -30,7 +30,7 @@ The results contained in here are:
   - under [_relational morphism_](#Relational-surjective-morphisms);
   - `af =` for finite types, `af ≤` for `nat`;
   - closure of `af` under `k`-ary products
-- as a consequence, we get [_Dickson's lemma_] (see below).
+- as a consequence, we get [_Dickson's lemma_](#Some-results-contained-in-Kruskal-AlmostFull).
  
 This library is distributed under the terms of the [MPL-2.0](LICENSE) license.
 
@@ -41,7 +41,7 @@ It can be installed via `opam` and requires
 - [Kruskal-Finite](https://github.com/DmxLarchey/Kruskal-Finite)
 
 It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...`,
-see section on the external interface below.
+see section on [the external interface](#The-external-interface) below.
   
 # Overview of the definitions
 
@@ -58,11 +58,11 @@ From this definition, we recover the property characterising WQOs _classically_:
 ```coq
 af_recursion : af R → ∀f : nat → X, ∃ i j, i < j ∧ R fᵢ fⱼ
 ```
-where the type `X` is not explicited: this means that any (infinite) sequence `f : nat → X` 
+where the type `X` is not explicit: this means that any (infinite) sequence `f : nat → X` 
 contains a _good pair_ (ie increasing: both `i < j` and `R fᵢ fⱼ` hold). Notice that 
-the `af R` predicate is _constructivelly stronger_ than its classical characterisation, mainly
-because, as Coquand frames it, it works also for _sequences that are not given by a law_ (hence
-living outside of type `nat → X`).
+the `af R` predicate is _constructively stronger_ than its classical characterization, mainly
+because, as [Coquand frames it](https://www.cairn-int.info/journal-revue-internationale-de-philosophie-2004-4-page-483.htm), 
+it works also _for sequences that are not given by a law_ (hence living outside of type `nat → X`).
 
 A variant definition can be implemented at `Type` level (informative)
 instead of the `Prop` level (non-informative) with the __nearly__
@@ -91,9 +91,9 @@ contents. See below for a section discussing this question specifically.
 
 The library deals with both versions `af R : Prop` or `af R : Type` in a _generic way_, using
 the _same code base_. Indeed, in `Ltac` language, identical proof scripts
-can accomodate with the two variants `Prop` vs `Type` in a uniform way.
+can accommodate with the two variants `Prop` vs `Type` in a uniform way.
 The actual Coq lambda-terms produced by these scripts differ however but
-these terms are here computer generated exclusivelly by `Ltac` proof scripts.
+these terms are here computer generated exclusively by `Ltac` proof scripts.
 
 To deal with the `Prop` vs `Type` choice, we define a _notation_
 `Base` which is either `Base := Prop` or `Base := Type` and, consistently
@@ -123,7 +123,7 @@ Inductive af {X} (R : X → X → Prop) : Base :=
 ```
 
 To be complete, with [`af_recursion`](theories/af/af.v), we get
-a refinement of the property classically characterising WQOs, stated (and proved) as
+a refinement of the property classically characterizing WQOs, stated (and proved) as
 ```coq
 Fact af_recursion X (R : X → X → Prop) : af R → ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R fᵢ fⱼ
 ```
@@ -175,7 +175,7 @@ The installation procedure _compiles the code base twice_:
 - and once under the choice `Base := Type` and it installs the `KruskalAfType` library.
 
 Then both `KruskalAfProp` and `KruskalAfType` can be imported from at the same
-time but there namespaces overlap and it is strongly advised not to load both.
+time but there name spaces coincide and it is strongly advised not to load both.
 The intent is to write code that works with either choice.
 
 From the point of view of the _external interface_ of the library, 
@@ -189,9 +189,9 @@ command would be:
 From KruskalAfType Require Export base almost_full.
 ```
 
-It is recommanded to perform this import in a single file using
+It is recommended to perform this import in a single file using
 the `Export` directive so that `Base` would be properly defined
-uniformyl in every single file importing the library.
+uniformly in every single file importing the library.
 
 # The computational contents of the `af` predicate
 
@@ -215,7 +215,7 @@ We see that it proceeds as a fixpoint by structural recursion on the proof of th
 a bound `n` for `R↑f₀` and the tail of the sequence `f` (ie `λ x, f (S x)`), and we state that `S n` is a bound 
 for `f` itself, and then prove it as `[PO₂]` above.
 
-Hence, we can view the computational contents of `a : af R` as a _well-founded tree_ and use `f` to traverse a branch of that tree,
+Hence, we can view the computational contents of `a : af R` as a _well founded tree_ and use `f` to traverse a branch of that tree,
 selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number `n` of nodes 
 crossed until the `af` tree tells us this relation is full gives the bound `2+n`.
 
@@ -237,7 +237,7 @@ where `R⇓P : {x | P x} → {x | P x} → Prop` is the restriction of `R : X �
 There is an "obvious" surjective morphism from `X` to `{x | P x}` except that it is not so obvious:
 - it cannot be implemented as a Coq function of type `X → {x | P x}` because the morphism is in fact 
   a _partial function_ that is not supposed to map values `x` for which `P x` does not hold;
-- it cannot be proved sujective because there is no reason for unicity of the proof of `P x` (unless `P` 
+- it cannot be proved surjective because there is no reason for uniqueness of the proof of `P x` (unless `P` 
   is turned into a Boolean predicate).
 
 To avoid these _strong impairments_, we can instead view the morphism as a _relation_ of type `f : X → Y → Prop`
