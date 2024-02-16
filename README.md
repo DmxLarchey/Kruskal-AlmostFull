@@ -24,7 +24,7 @@ The results contained in here are:
   - with a proof of the FAN theorem for inductive bars;
 - critically, closure properties for `af`/`bar`:
   - under _direct products_ and _direct sums_ via Coquand's version Ramsey's theorem;
-  - under [_relational morphism_](#Relational surjective morphisms);
+  - under [_relational morphism_](#Relational-surjective-morphisms);
   - `af =` for finite types, `af ≤` for `nat`;
   - closure of `af` under `k`-ary products
 - as a consequence, we get [_Dickson's lemma_](https://en.wikipedia.org/wiki/Dickson%27s_lemma) (see below).
