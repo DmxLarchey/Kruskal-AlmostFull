@@ -244,5 +244,5 @@ instead of type `f : X → Y`. Then:
 
 In the case of the projection on the Σ-type `{x | P x}`, the morphism `f` is simply defined as `f := λ x y, y = π₁ x` and we are done!!
 Using relational morphisms it becomes trivial to establish results like eg `af R↑x₀ → af R⇓(λ x, ¬ R x₀ x)`. Beware the converse implication
-is an involved question related to decidability of `λ x, ¬ R x₀ x`.
+is an involved question related to decidability of `R x₀`.
 
