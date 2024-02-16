@@ -12,22 +12,25 @@
 # What is this library?
 
 This library formalizes ground results about _Almost Full relations_ (AF) in `Coq 8.14+`,
-up to Dickson's lemma, but excluding Higman's lemma or Kruskal's tree theorem which are
-to be provided in later library.
+up to [Dickson's lemma](https://en.wikipedia.org/wiki/Dickson%27s_lemma), 
+but excluding [Higman's lemma](https://en.wikipedia.org/wiki/Higman%27s_lemma) 
+or the more complex [Kruskal's tree theorem](https://en.wikipedia.org/wiki/Kruskal%27s_tree_theorem) 
+which are to be provided in upcoming libraries.
+This library is a _major and modular rewrite_ of a somewhat [monolithic development](https://members.loria.fr/DLarchey/files/Kruskal/index.html) 
+concluding in a constructive/inductive proof of Kruskal's tree theorem.
 
-We define the notion of AF relation inductivelly as the constructive counterpart of the classical
+We define the notion of AF relation inductively as the constructive counterpart of the classical
 notion of [_Well Quasi Order_](https://en.wikipedia.org/wiki/Well-quasi-ordering) (WQO). 
 The results contained in here are:
-- the `af R` predicate (see below) characterizing AF relations;
+- the [`af R` predicate](#Overview-of-the-definitions) characterizing AF relations;
 - the classical characterization with _good pairs_ (see `af_recursion` below);
-- the equivalence with _Bar inductive predicates_: `af R ↔ bar (good R) []`
-  - with a proof of the FAN theorem for inductive bars;
-- critically, closure properties for `af`/`bar`:
+- the equivalence with _Bar inductive predicates_: `af R ↔ bar (good R) []`;
+- critically, [closure properties for `af`/`bar`](#Some-results-contained-in-Kruskal-AlmostFull):
   - under _direct products_ and _direct sums_ via Coquand's version Ramsey's theorem;
   - under [_relational morphism_](#Relational-surjective-morphisms);
   - `af =` for finite types, `af ≤` for `nat`;
   - closure of `af` under `k`-ary products
-- as a consequence, we get [_Dickson's lemma_](https://en.wikipedia.org/wiki/Dickson%27s_lemma) (see below).
+- as a consequence, we get [_Dickson's lemma_] (see below).
  
 This library is distributed under the terms of the [MPL-2.0](LICENSE) license.
 
