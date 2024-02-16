@@ -223,4 +223,5 @@ statement ... : af R → af T
 ```
 
 `af R → af R⇓P` where `R⇓P : {x | P x} → {x | P x} → Prop` is the restriction of `R : X → X → Prop` to the Σ-type `{x | P x}`. 
+`af R↑x₀ → af R⇓(λ x, ¬ R x₀ x).`
 
