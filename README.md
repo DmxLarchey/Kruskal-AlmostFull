@@ -219,28 +219,30 @@ crossed until the `af` tree tells us this relation is full gives the bound `2+n`
 # Relational surjective morphisms
 
 Transporting the AF property from `R : X → X → Prop` to `T : Y → Y → Prop` can be performed using a morphism `f : X → Y` which 
-is an relation preserving map, moreover supposed to be surjective. Hence, proving a statement like
+is a _relation preserving_ map, moreover supposed to be _surjective_. Hence, proving a statement like eg
 `af R → af T` only involves providing `f : X → Y`, and proving:
-- morphism as `∀ u v, R u v → T fᵤ fᵥ`;
+- morphism as `∀ u v, R u v → T (f u) (f v)`;
 - and surjectivity `∀ y, ∃ₜ x, y = f x`;
 
-which is very convenient indeed. Unfortunately this does not work very well with Σ-types. For instance consider the statement
+which is very convenient indeed: the notion of AF is absent from those two requirements.
+Unfortunately this does not work very well with Σ-types. For instance consider the 
+natural statement that AF is _closed under restriction_:
 ```coq
 af_af_sub_rel X (P : X → Prop) (R : X → X → Prop): af R → af R⇓P
 ```
-where `R⇓P : {x | P x} → {x | P x} → Prop` is the _restriction_ of `R : X → X → Prop` to the Σ-type `{x | P x}`. 
-There is an "obvious" surjective morphism from `X` to `{x | P x}` except that:
+where `R⇓P : {x | P x} → {x | P x} → Prop` is the restriction of `R : X → X → Prop` to the Σ-type `{x | P x}`. 
+There is an "obvious" surjective morphism from `X` to `{x | P x}` except that it is not so obvious:
 - it cannot be implemented as a Coq function of type `X → {x | P x}` because the morphism is in fact 
   a _partial function_ that is not supposed to map values `x` for which `P x` does not hold;
-- it cannot be proved sujective because there is no reason for unicity of the proof of `P x` (unless `P` is eg Boolean).
+- it cannot be proved sujective because there is no reason for unicity of the proof of `P x` (unless `P` 
+  is turned into a Boolean predicate).
 
-To avoid these _strong impairments_, we can instead view the morphism as a _relation_, ie in type `f : X → Y → Prop`
-instead of `f : X → Y`. Then:
+To avoid these _strong impairments_, we can instead view the morphism as a _relation_ of type `f : X → Y → Prop`
+instead of type `f : X → Y`. Then:
 - not only the partiality constraint fades away;
-- but also, the morphism can have _several output values_ (possibly
-even infinitely many).
+- but also, the morphism can have _several output values_ (possibly even infinitely many).
 
 In the case of the projection on the Σ-type `{x | P x}`, the morphism `f` is simply defined as `f := λ x y, y = π₁ x` and we are done!!
-Using relational morphisms it becomes trivial to establish results like eg `af R↑x₀ → af R⇓(λ x, ¬ R x₀ x)` (beware the converse implication
-is an involved issue related to decidability of `λ x, ¬ R x₀ x`).
+Using relational morphisms it becomes trivial to establish results like eg `af R↑x₀ → af R⇓(λ x, ¬ R x₀ x)`. Beware the converse implication
+is an involved question related to decidability of `λ x, ¬ R x₀ x`.
 
