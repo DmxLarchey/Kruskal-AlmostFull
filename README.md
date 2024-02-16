@@ -202,7 +202,7 @@ A way to look at the CC is to study the proof term for `af_recursion` which woul
 Fixpoint af_recursion {R} (a : af R) f {struct a} : { n | ∃ i j, i < j < n ∧ R fᵢ fⱼ } :=
   match a with
   | af_full h => exist _ 2 [PO₁]
-  | af_lift h => let (n,hn) := af_recursion (h (f 0)) (λ x, f (S x)) in
+  | af_lift h => let (n,hn) := af_recursion (h f₀) (λ x, f (S x)) in
                  exist _ (S n) [PO₂]
   end.
 ```
@@ -214,10 +214,12 @@ We see that it proceeds as a fixpoint by structural recursion on the proof of th
 - when all the lifts of `R` are `af` witnessed by `h : ∀ a, af (R↑a)`, then a recursive call on the proof `h f₀ : af (R↑f₀)` computes 
 a bound `n` for `R↑f₀` and the tail of the sequence `f` (ie `λ x, f (S x)`), and we state that `S n` is a bound 
 for `f` itself, and then prove it as `[PO₂]` above.
+- the proof obligations `[PO₁]` and `[PO₂]` are omitted here because do not participate in the CC.
 
-Hence, we can view the computational contents of `a : af R` as a _well founded tree_ and use `f` to traverse a branch of that tree,
+Hence, we can view the computational contents of `a : af R` as containing _well founded tree_ and use `f` to traverse a branch of that tree,
 selecting the upper node with `f₀`, `f₁`, `f₂` successively until the relation `R↑f₀...↑fₙ₋₁` becomes full. The number `n` of nodes 
-crossed until the `af` tree tells us this relation is full gives the bound `2+n`.
+crossed until the `af` tree tells us this relation is full gives the bound `2+n`. The well founded tree contained in `a : af R` collects,
+along its branches, bounds on the position of good pairs for every possible sequence of values.
 
 # Relational surjective morphisms
 
