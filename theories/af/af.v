@@ -148,7 +148,7 @@ Fact afs_mono X (P Q : rel₁ X) (R T : rel₂ X) :
 Proof.
   intros H1 H2.
   af rel morph eq; eauto.
-  intros ? ? ? ? _ _ ? ? <- <-; eauto.
+  intros; subst; eauto.
 Qed.
 
 #[global] Hint Resolve afs_mono : core.
