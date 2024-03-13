@@ -108,7 +108,7 @@ Section afs_rel_morph.
 
   (** Like for af_relmap
 
-      One can show afs P R → af Q T by exhibiting a
+      One can show afs P R → afs Q T by exhibiting a
       relational surjective morphism from P/R to Q/T.
 
    *)
@@ -202,10 +202,10 @@ Section af_recursion_total.
   Definition af_rec_fun R :=
      ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j).
 
-  (** clearly af R -> af_recursion_total -> af_recursion
-      af_recursion -> af R requires choice somehow
-      what about af_recursion_total -> af R ??
-                 af_recursion -> af_recursion_total (choice here !!!)
+  (** clearly af R → af_recursion_total → af_recursion
+      af_recursion → af R requires choice somehow
+      what about af_recursion_total → af R ??
+                 af_recursion → af_recursion_total (choice here !!!)
  *)
 
   (* Any total relation nat -> X -> Prop (not just any term nat -> X)
