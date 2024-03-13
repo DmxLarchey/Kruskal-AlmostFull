@@ -36,10 +36,7 @@ Fact af_mono X (R T : rel₂ X) : R ⊆₂ T → af R → af T.
 Proof. intros H H1; revert H1 T H; induction 1; eauto. Qed.
 
 Fact af_inv X (R : rel₂ X) : af R → ∀x, af (R↑x).
-Proof.
-  intros []; auto.
-  intro; constructor 1; simpl; eauto.
-Qed.
+Proof. intros []; auto; constructor 1; simpl; eauto. Qed.
 
 Fact afs_inv U X (R : rel₂ U) : afs X R → ∀x, X x → afs X (R↑x).
 Proof. intros []; auto; constructor 1; simpl; eauto. Qed.
