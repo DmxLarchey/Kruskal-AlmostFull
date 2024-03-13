@@ -73,9 +73,9 @@ Section bar_good_af.
     induction Hl; simpl; eauto.
   Qed.
 
-  Local Lemma af_bar_good_rec T : af T → ∀ R l, T ⊆₂ R⇈l → bar (good R) l.
+  Local Lemma af_bar_good_rec T R : af T → ∀l, T ⊆₂ R⇈l → bar (good R) l.
   Proof.
-    induction 1 as [ T HT | T _ IHT ]; intros R l Hl.
+    induction 1 as [ T HT | T _ IHT ]; intros l Hl.
     + constructor 2; intros u.
       constructor 2; intros v.
       constructor 1.
