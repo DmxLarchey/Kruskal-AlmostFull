@@ -42,10 +42,7 @@ Proof.
 Qed.
 
 Fact afs_inv U X (R : rel₂ U) : afs X R → ∀x, X x → afs X (R↑x).
-Proof.
-  intros []; auto.
-  intros ? ?; constructor 1; simpl; eauto.
-Qed.
+Proof. intros []; auto; constructor 1; simpl; eauto. Qed.
 
 #[global] Hint Resolve af_mono : core.
 
