@@ -45,13 +45,16 @@ opam update
 opam install coq-kruskal-almostfull
 ```
 and requires
-- [Kruskal-Trees](https://github.com/DmxLarchey/Kruskal-Trees)
-- [Kruskal-Finite](https://github.com/DmxLarchey/Kruskal-Finite)
+- [`Kruskal-Trees`](https://github.com/DmxLarchey/Kruskal-Trees)
+- [`Kruskal-Finite`](https://github.com/DmxLarchey/Kruskal-Finite)
 
-but see also [Kruskal-Higman](https://github.com/DmxLarchey/Kruskal-Higman)
-if you need Higman's lemma (homeomorphic list embedding is AF). Shortly,
-Kruskal's tree theorem should also appear as `Kruskal-Theorem`. It just needs
-code polishing before release. Ask me directly if you are in a hurry!!
+but see also 
+- [`Kruskal-Higman`](https://github.com/DmxLarchey/Kruskal-Higman)
+  if you need Higman's lemma (homeomorphic list embedding is AF);
+- [`Kruskal-Veldman`](https://github.com/DmxLarchey/Kruskal-Veldman)
+  for the critical/central/complicate proof, following Wim Veldman's account;
+- [`Kruskal-Theorems`](https://github.com/DmxLarchey/Kruskal-Veldman) available shortly,
+  Kruskal's and Higman's tree theorems.
 
 It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...`,
 see section on [the external interface](#The-external-interface) below.
