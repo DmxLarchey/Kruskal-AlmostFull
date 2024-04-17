@@ -53,8 +53,8 @@ but see also
   if you need Higman's lemma (homeomorphic list embedding is AF);
 - [`Kruskal-Veldman`](https://github.com/DmxLarchey/Kruskal-Veldman)
   for the critical/central/complicate proof, following Wim Veldman's account;
-- [`Kruskal-Theorems`](https://github.com/DmxLarchey/Kruskal-Veldman) available shortly,
-  Kruskal's and Higman's tree theorems.
+- [`Kruskal-Theorems`](https://github.com/DmxLarchey/Kruskal-Theorems)
+  for Kruskal's and Higman's tree theorems.
 
 It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...`,
 see section on [the external interface](#The-external-interface) below.
