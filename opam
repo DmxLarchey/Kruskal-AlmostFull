@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "Coq-Kruskal-AlmostFull"
-version: "1.0"
+version: "1.0.1"
 synopsis: "Base Coq library for manipulating Almost Full relations"
 description: """
    This library formalizes ground results about Almost Full relations (AF) in Coq 8.14+, up to Dickson's lemma.
@@ -13,7 +13,7 @@ bug-reports: "https://github.com/DmxLarchey/Kruskal-AlmostFull/issues"
 dev-repo: "git+https://github.com:DmxLarchey/Kruskal-AlmostFull/"
 
 build: [
-  [ make "-j%{jobs}%" "type"]
+  [make "-j%{jobs}%" "type"]
 ]
 install: [
   [make "install"]

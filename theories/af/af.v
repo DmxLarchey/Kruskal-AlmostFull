@@ -36,16 +36,10 @@ Fact af_mono X (R T : rel₂ X) : R ⊆₂ T → af R → af T.
 Proof. intros H H1; revert H1 T H; induction 1; eauto. Qed.
 
 Fact af_inv X (R : rel₂ X) : af R → ∀x, af (R↑x).
-Proof.
-  intros []; auto.
-  intro; constructor 1; simpl; eauto.
-Qed.
+Proof. intros []; auto; constructor 1; simpl; eauto. Qed.
 
 Fact afs_inv U X (R : rel₂ U) : afs X R → ∀x, X x → afs X (R↑x).
-Proof.
-  intros []; auto.
-  intros ? ?; constructor 1; simpl; eauto.
-Qed.
+Proof. intros []; auto; constructor 1; simpl; eauto. Qed.
 
 #[global] Hint Resolve af_mono : core.
 
@@ -114,7 +108,7 @@ Section afs_rel_morph.
 
   (** Like for af_relmap
 
-      One can show afs P R → af Q T by exhibiting a
+      One can show afs P R → afs Q T by exhibiting a
       relational surjective morphism from P/R to Q/T.
 
    *)
@@ -154,7 +148,7 @@ Fact afs_mono X (P Q : rel₁ X) (R T : rel₂ X) :
 Proof.
   intros H1 H2.
   af rel morph eq; eauto.
-  intros ? ? ? ? _ _ ? ? <- <-; eauto.
+  intros; subst; eauto.
 Qed.
 
 #[global] Hint Resolve afs_mono : core.
@@ -215,10 +209,10 @@ Section af_recursion_total.
   Definition af_rec_fun R :=
      ∀f : nat → X, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j).
 
-  (** clearly af R -> af_recursion_total -> af_recursion
-      af_recursion -> af R requires choice somehow
-      what about af_recursion_total -> af R ??
-                 af_recursion -> af_recursion_total (choice here !!!)
+  (** clearly af R → af_recursion_total → af_recursion
+      af_recursion → af R requires choice somehow
+      what about af_recursion_total → af R ??
+                 af_recursion → af_recursion_total (choice here !!!)
  *)
 
   (* Any total relation nat -> X -> Prop (not just any term nat -> X)

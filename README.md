@@ -36,11 +36,25 @@ The results contained in here are:
  
 This library is distributed under the terms of the [MPL-2.0](LICENSE) license.
 
-# Dependencies
+# Dependencies and install
 
-It can be installed via `opam` and requires
-- [Kruskal-Trees](https://github.com/DmxLarchey/Kruskal-Trees)
-- [Kruskal-Finite](https://github.com/DmxLarchey/Kruskal-Finite)
+It can be installed via `opam` 
+```console
+opam repo add coq-released https://coq.inria.fr/opam/released
+opam update
+opam install coq-kruskal-almostfull
+```
+and requires
+- [`Kruskal-Trees`](https://github.com/DmxLarchey/Kruskal-Trees)
+- [`Kruskal-Finite`](https://github.com/DmxLarchey/Kruskal-Finite)
+
+but see also 
+- [`Kruskal-Higman`](https://github.com/DmxLarchey/Kruskal-Higman)
+  if you need Higman's lemma (homeomorphic list embedding is AF);
+- [`Kruskal-Veldman`](https://github.com/DmxLarchey/Kruskal-Veldman)
+  for the critical/central/complicate proof, following Wim Veldman's account;
+- [`Kruskal-Theorems`](https://github.com/DmxLarchey/Kruskal-Theorems)
+  for Kruskal's and Higman's tree theorems.
 
 It can then be accessed via `From KruskalAfProp Require ...` or `From KruskalAfType Require ...`,
 see section on [the external interface](#The-external-interface) below.
