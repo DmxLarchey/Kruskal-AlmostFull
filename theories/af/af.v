@@ -182,19 +182,26 @@ Proof.
   + intros ? ? [] [] -> ->; simpl; tauto.
 Qed.
 
-Theorem af_recursion X : ∀ (R : rel₂ X), af R → ∀f, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j).
+#[local] Definition afₛ {X} (R : rel₂ X) := ∀f, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j).
+
+#[local] Fact afₛ_full {X R} : (∀ x y : X, R x y) → afₛ R.
+Proof. intros H f; exists 2, 0, 1; auto. Qed.
+
+#[local] Fact afₛ_lift {X R} : (∀ a : X, afₛ (R↑a)) → afₛ R.
 Proof.
-  refine (fix loop {R} a f { struct a } :=
+  intros H f.
+  destruct (H (f 0) (fun n => f (S n))) as (n & Hn).
+  exists (S n).
+  destruct Hn as (i & j & ? & []);
+    [ exists (S i), (S j) | exists 0, (S i) ]; split; auto; tlia.
+Qed.
+
+Definition af_recursion X : ∀ (R : rel₂ X), af R → afₛ R :=
+  fix loop R a :=
     match a with
-    | af_full h => _
-    | af_lift h => let (n,hn) := loop (h (f 0)) (λ n, f (S n)) in _
-    end).
-  + exists 2. 
-    abstract (exists 0, 1; split; auto).
-  + exists (S n). 
-    abstract (destruct hn as (i & j & Hij & [ H | H ]); 
-      [ exists (S i), (S j) | exists 0, (S i) ]; split; auto; tlia).
-Defined.
+    | af_full h => afₛ_full h
+    | af_lift h => afₛ_lift (fun x => loop _ (h x))
+    end.
 
 Section af_recursion_total.
 
