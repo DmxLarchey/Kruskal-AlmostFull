@@ -8,7 +8,6 @@ prop:
 	rm -f theories/_CoqProject
 	echo '-R . KruskalAfProp' > theories/_CoqProject
 	cat theories/CoqProject >> theories/_CoqProject
-#	cp -f theories/CoqProjectProp theories/_CoqProject
 	@+$(MAKE) -C theories Makefile
 	@+$(MAKE) -C theories clean
 	@+$(MAKE) -C theories all
@@ -19,7 +18,6 @@ type:
 	rm -f theories/_CoqProject
 	echo '-R . KruskalAfType' > theories/_CoqProject
 	cat theories/CoqProject >> theories/_CoqProject
-#	cp -f theories/CoqProjectType theories/_CoqProject
 	@+$(MAKE) -C theories Makefile
 	@+$(MAKE) -C theories clean
 	@+$(MAKE) -C theories all

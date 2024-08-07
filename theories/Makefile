@@ -3,6 +3,8 @@ all: Makefile.coq
 
 clean: Makefile.coq
 	@+$(MAKE) -f Makefile.coq clean
+
+mrproper: clean
 	rm -f Makefile.coq Makefile.coq.conf
 	find \( -name "*.aux" -o -name "*.vo*" -o -name "*.glob" \) -exec rm -f {} \;
 
