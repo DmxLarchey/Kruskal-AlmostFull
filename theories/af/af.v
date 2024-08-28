@@ -178,10 +178,10 @@ Qed.
 
 #[local] Definition afₛ {X} (R : rel₂ X) := ∀f, ∃ₜ n, ∃ i j, i < j < n ∧ R (f i) (f j).
 
-#[local] Fact afₛ_full {X R} : (∀ x y : X, R x y) → afₛ R.
+#[local] Fact afₛ_full {X} {R : rel₂ X} : (∀ x y : X, R x y) → afₛ R.
 Proof. intros H f; exists 2, 0, 1; auto. Qed.
 
-#[local] Fact afₛ_lift {X R} : (∀ a : X, afₛ (R↑a)) → afₛ R.
+#[local] Fact afₛ_lift {X} {R : rel₂ X} : (∀ a : X, afₛ (R↑a)) → afₛ R.
 Proof.
   intros H f.
   destruct (H (f 0) (fun n => f (S n))) as (n & Hn).
