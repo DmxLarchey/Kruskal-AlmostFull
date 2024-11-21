@@ -69,3 +69,12 @@ Proof. symmetry; apply app_nil_r. Qed.
 
 Definition app_ass X (l m k : list X) : (l++m)++k = l++(m++k).
 Proof. now rewrite app_assoc. Qed.
+
+(** The two following are because app_length is deprecated in favor
+    of length_app since Coq 8.20 *)
+
+Definition app_length X (l m : list X) : ⌊l++m⌋ = ⌊l⌋+⌊m⌋.
+Proof. now induction l; simpl; f_equal. Qed.
+
+Definition length_app := app_length.
+ 
