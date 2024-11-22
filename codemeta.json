@@ -19,7 +19,7 @@
     "dateModified": "2024-11-21",
     "datePublished": "2024-02-16",
     "description": "This library formalizes ground results about Almost Full relations (AF) in Coq 8.14+, up to Dickson's lemma.",
-    "downloadUrl": "https://github.com/DmxLarchey/Kruskal-AlmostFull",
+    "downloadUrl": "https://github.com/DmxLarchey/Kruskal-AlmostFull/archive/refs/tags/1.2.tar.gz",
     "funder": {
         "type": "Organization",
         "name": "CNRS"
