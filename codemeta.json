@@ -29,6 +29,8 @@
         "coq",
         "rose trees",
         "dependent types",
+        "almost full relations",
+        "Ramsey's theorem",
         "Kruskal tree theorem"
     ],
     "license": "https://spdx.org/licenses/MPL-2.0",
