@@ -9,7 +9,9 @@
 (**************************************************************)
 ```
 
-# What is this library?
+# What is this library
+
+This sub-project is part of the larger project `Coq-Kruskal` described here: https://github.com/DmxLarchey/Coq-Kruskal.
 
 This library formalizes ground results about _Almost Full relations_ (AF) in `Coq 8.14+`,
 up to [Dickson's lemma](https://en.wikipedia.org/wiki/Dickson%27s_lemma), 
