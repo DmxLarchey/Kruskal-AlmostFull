@@ -7,7 +7,8 @@
 (*        Mozilla Public License Version 2.0, MPL-2.0         *)
 (**************************************************************)
 
-From Coq Require Import Utf8.
+From Stdlib
+  Require Import Utf8.
 
 Require Import base notations lift af.
 
