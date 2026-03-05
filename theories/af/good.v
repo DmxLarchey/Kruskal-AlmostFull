@@ -188,23 +188,16 @@ Section good_sub_rel.
   Variable (X : Type) (P : rel₁ X) (R : rel₂ X).
 
   Fact good_sub_rel l : good R⇓P l
-                      ↔ good R (map (@proj1_sig _ _) l)
-                      ∧ Forall P (map (@proj1_sig _ _) l).
+                      ↔ good R (map (@proj1_sig _ _) l).
   Proof.
     split.
-    + intros H; split.
-      * induction H as [ (x&Hx) (y&Hy) l H1 H2 | (x&?) l H IH ]; simpl; auto.
-        constructor 1 with y; auto; apply in_map_iff; exists (exist _ _ Hy); auto.
-      * clear H; induction l as [ | [] ]; simpl; eauto.
-    + intros [ H1 H2 ].
-      induction l as [ | (x & Hx) l IH ].
-      * apply good_nil_inv in H1 as [].
-      * simpl in *.
-        apply Forall_cons_inv in H2 as (_ & H2).
-        apply good_cons_inv in H1 as [ (y & H3 & H4) | H1 ].
-        - apply in_map_iff in H3 as (y' & E & H3).
-          constructor 1 with y'; subst; auto.
-        - constructor 2; auto.
+    + induction 1 as [ [] [] | [] ]; simpl; auto.
+      econstructor 1; eauto using in_map.
+    + induction l as [ | [] ].
+      * now intros ?%good_nil_inv.
+      * intros [ (? & (? & <- & ?)%in_map_iff & ?) | ]%good_cons_inv.
+       - econstructor 1; eauto.
+       - constructor 2; auto.
   Qed.
 
   Fact good_map_proj1_sig l l' :
