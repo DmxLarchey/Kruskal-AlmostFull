@@ -11,13 +11,13 @@
     Here is the file that should be loaded for the predicative
     and informative version *)
 
-#[global] Notation Base := Type (only parsing).
+#[global] Abbreviation Base := Type (only parsing).
 
 Module Base_Sums_Products.
 
-  Notation Absurd := Empty_set (only parsing).
-  Notation DepSum := sigT (only parsing).
-  Notation NonDepSum := sum (only parsing).
-  Notation NonDepProd := prod (only parsing).
+  Abbreviation Absurd := Empty_set (only parsing).
+  Abbreviation DepSum := sigT (only parsing).
+  Abbreviation NonDepSum := sum (only parsing).
+  Abbreviation NonDepProd := prod (only parsing).
 
 End Base_Sums_Products.

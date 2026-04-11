@@ -34,7 +34,7 @@ Section bar.
   Fact bar_mono P Q : P ⊆₁ Q -> bar P ⊆₁ bar Q.
   Proof. induction 2; eauto. Qed.
 
-  Notation mono P := (∀ x l, P l → P (x::l)).
+  Abbreviation mono P := (∀ x l, P l → P (x::l)).
 
   Fact bar_inv_mono P : mono P → mono (bar P).
   Proof. induction 2; eauto. Qed.
